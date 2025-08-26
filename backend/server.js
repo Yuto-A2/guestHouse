@@ -1,12 +1,14 @@
 const express = require('express');
 const cors = require('cors');
-require('dotenv').config();
+const mongoose = require('mongoose');         
+require('dotenv').config();                    
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const dbUrl = process.env.MONGO_URL;          
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -14,3 +16,17 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.json({ message: 'Guesthouse API Server is running!' });
 });
+
+// Connect Database
+mongoose
+  .connect(dbUrl) 
+  .then(() => {
+    console.log('MongoDB connected');
+    app.listen(PORT, () => {
+      console.log(`Server listening on http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
+  });

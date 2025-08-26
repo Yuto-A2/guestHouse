@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
 const Property = require('../models/property');
 require('dotenv').config();
+const dbUrl = process.env.MONGO_URL; 
 
-// データベース接続
+// Database
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/guesthouse', {
+    await mongoose.connect(dbUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
@@ -16,7 +17,7 @@ const connectDB = async () => {
   }
 };
 
-// シードデータ
+// Seed
 const sampleProperties = [
   {
         address: "1204 Avenue Rd",
@@ -56,7 +57,7 @@ const sampleProperties = [
     },
 ];
 
-// データベースクリア関数
+// Database clear
 const clearDatabase = async () => {
   try {
     await Property.deleteMany({});
@@ -66,13 +67,13 @@ const clearDatabase = async () => {
   }
 };
 
-// シードデータ投入関数
+// Insert into seed
 const seedProperties = async () => {
   try {
     const createdProperties = await Property.insertMany(sampleProperties);
     console.log(`${createdProperties.length} properties seeded successfully!`);
-    
-    // 作成されたプロパティを表示
+
+    // Show properties
     createdProperties.forEach((property, index) => {
       console.log(`${index + 1}. ${property.address} (${property.property_type})`);
     });
@@ -81,7 +82,7 @@ const seedProperties = async () => {
   }
 };
 
-// メイン実行関数
+// Run seed
 const runSeeds = async () => {
   console.log('🌱 Starting database seeding...');
   
@@ -93,13 +94,13 @@ const runSeeds = async () => {
   process.exit(0);
 };
 
-// エラーハンドリング
+// Error handling
 process.on('unhandledRejection', (err) => {
   console.error('Unhandled Promise Rejection:', err);
   process.exit(1);
 });
 
-// スクリプト実行
+// script
 if (require.main === module) {
   runSeeds();
 }
