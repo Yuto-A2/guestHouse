@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');         
+const mongoose = require('mongoose');       
+const propertyRoutes = require('./routes/property');  
 require('dotenv').config();                    
 
 const app = express();
@@ -16,6 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/', (req, res) => {
   res.json({ message: 'Guesthouse API Server is running!' });
 });
+
+app.use('/properties', propertyRoutes);         
 
 // Connect Database
 mongoose
