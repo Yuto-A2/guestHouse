@@ -30,3 +30,39 @@ module.exports.showProperties = async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 };
+
+module.exports.renderEditForm = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const property = await Property.findById(id);
+        if (!property) {
+            return res.status(404).json({ error: 'Property not found' });
+        }
+        res.json(property);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+}
+
+module.exports.updateProperty = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.body);
+    const property = await Property.findByIdAndUpdate(id, { ...req.body}, { new: true });
+    if (!property) {
+        return res.status(404).json({ error: 'Property not found' });
+    }
+    res.json(property);
+}
+
+module.exports.deleteProperty = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const property = await Property.findByIdAndDelete(id);
+        if (!property) {
+            return res.status(404).json({ error: 'Property not found' });
+        }
+        res.json({ message: 'Property deleted successfully' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+}
