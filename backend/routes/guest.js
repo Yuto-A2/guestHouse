@@ -8,4 +8,6 @@ router.route('/')
 .get(guest.Guests)
 .post(guest.Register)
 
+router.post('/login', guest.login);
+
 module.exports = router;
