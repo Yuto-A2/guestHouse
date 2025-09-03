@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+const passportLocalMongoose = require("passport-local-mongoose");
 
 delete mongoose.models.Guest;
-const GuestSchema = new mongoose.Schema(
+const GuestSchema = new Schema(
     {
         fname: {
             type: String,
@@ -14,6 +16,7 @@ const GuestSchema = new mongoose.Schema(
         email: {
             type: String,
             required: true,
+            unique: true,
         },
         phone_num: {
             type: String,
@@ -23,6 +26,7 @@ const GuestSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+GuestSchema.plugin(passportLocalMongoose, { usernameField: "email" });
 const Guest = mongoose.model("Guest", GuestSchema);
 
 module.exports = Guest;
