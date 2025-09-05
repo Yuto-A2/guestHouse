@@ -41,3 +41,75 @@ module.exports.login = (req, res, next) => {
         });
     })(req, res, next);
 };
+
+module.exports.logout = (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err);
+        req.session.destroy((err) => {
+            if (err) return next(err);
+            res.clearCookie('session');
+            res.json({ message: "Logout successful" });
+        });
+    });
+};
+
+module.exports.renderEditForm = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const guest = await Guest.findById(id);
+        if (!guest) {
+            return res.status(404).json({ error: 'Guest not found' });
+        }
+        res.json(guest);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+}
+
+module.exports.showGuests = async (req, res) => {
+    try {
+        const guest = await Guest.findById(req.params.id);
+        if (!guest) {
+            return res.status(404).json({ error: 'Guest not found' });
+        }
+        res.json(guest);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+
+module.exports.renderEditForm = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const guest = await Guest.findById(id);
+        if (!guest) {
+            return res.status(404).json({ error: 'Guest not found' });
+        }
+        res.json(guest);
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+}
+
+module.exports.updateGuest = async (req, res) => {
+    const { id } = req.params;
+    console.log(req.body);
+    const guest = await Guest.findByIdAndUpdate(id, { ...req.body}, { new: true });
+    if (!guest) {
+        return res.status(404).json({ error: 'Guest not found' });
+    }
+    res.json(guest);
+}
+
+module.exports.deleteGuest = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const guest = await Guest.findByIdAndDelete(id);
+        if (!guest) {
+            return res.status(404).json({ error: 'Guest not found' });
+        }
+        res.json({ message: 'Guest deleted successfully' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+}

@@ -9,12 +9,15 @@ require('dotenv').config();
 
 const propertyRoutes = require('./routes/property');
 const guestRoutes = require('./routes/guest');
+const reservationRoutes = require('./routes/reservation');
+const reviewRoutes = require('./routes/reviews');
 const Guest = require('./models/guest'); 
 
 // --- app & env ---
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dbUrl = process.env.MONGO_URL;
+const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
 app.use(cors({ origin: '*' })); 
@@ -31,13 +34,13 @@ store.on('error', (e) => console.log('SESSION STORE ERROR', e));
 const sessionConfig = {
   store,
   name: 'session',
-  secret: process.env.SESSION_SECRET || 'change-me',
+  secret: secret || 'change-me',
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true,           // 本番(HTTPS)で有効化
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7日
+    // secure: true,          
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
 };
 
@@ -58,7 +61,8 @@ app.get('/', (req, res) => {
 
 app.use('/properties', propertyRoutes);
 app.use('/guests', guestRoutes);
-
+app.use('/reservations', reservationRoutes);
+app.use('/guests/:id/reviews', reviewRoutes);
 
 // --- db & listen ---
 mongoose
