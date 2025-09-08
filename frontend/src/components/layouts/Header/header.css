@@ -1,3 +1,13 @@
+.header__title {
+    cursor: pointer;
+}
+
+.header__title a{
+    text-decoration: none;
+}
+
+
+/* Title, Link, Button */
 .header {
     display: flex;
     justify-content: space-between;
@@ -5,6 +15,23 @@
     padding: 16px 32px;
     background-color: #99b3ff;
 }
+
+/* Link, Button */
+.header__nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header_nav_list li {
+    display: none;
+}
+
+.header_nav_list a {
+    text-decoration: none;
+    color: black;
+}
+
 
 .header_nav_button {
     cursor: pointer;
@@ -24,4 +51,12 @@
 
 .header_nav_button_login {
     display: none;
+}
+
+.header_nav_list {
+    list-style: none;
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
 }

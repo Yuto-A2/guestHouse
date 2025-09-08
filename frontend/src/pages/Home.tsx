@@ -1,9 +1,9 @@
-import Header from "../components/layouts/Header/Header";
+import SectionTitle from "../components/layouts/title/SectionTitle";
 
 export default function Home() {
   return (
     <div>
-      <Header />
+      <SectionTitle sectionTitle="Property Address" />
     </div>
   );
 }
