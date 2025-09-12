@@ -2,7 +2,7 @@
     cursor: pointer;
 }
 
-.header__title a{
+.header__title a {
     text-decoration: none;
 }
 
@@ -16,7 +16,7 @@
     background-color: #99b3ff;
 }
 
-/* Link, Button */
+/* Link Button*/
 .header__nav {
     display: flex;
     align-items: center;
@@ -32,15 +32,27 @@
     color: black;
 }
 
+.header_nav_list {
+    list-style: none;
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Button */
 
 .header_nav_button {
+    display: inline-block;
     cursor: pointer;
     border: black 1px solid;
-    border-radius: 32px;
+    border-radius: 24px;
     padding: 16px;
     background-color: white;
     color: black;
-    width: 120px;
+    width: 112px;
+    text-align: center;
+    text-decoration: none;
     transition: transform 0.3s ease;
 }
 
@@ -53,10 +65,7 @@
     display: none;
 }
 
-.header_nav_list {
-    list-style: none;
+.header_nav_buttons {
     display: flex;
     gap: 16px;
-    margin: 0;
-    padding: 0;
 }

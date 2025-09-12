@@ -1,8 +1,10 @@
 "use client";
 import "./header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Button from "../button/Button";
 
 export default function Header() {
+  const navigate = useNavigate();
   return (
     <header className="header">
       <h1 className="header__title">
@@ -16,8 +18,8 @@ export default function Header() {
         </ul>
         {/* Button */}
         <div className="header_nav_buttons">
-          <button className="header_nav_button">Sign Up</button>
-          <button className="header_nav_button header_nav_button_login">Login</button>
+          <Button onClick={() => navigate("/signup")} text="Sign up" className="header_nav_button" />
+          <Button onClick={() => navigate("/login")} text="Login" className="header_nav_button header_nav_button_login" />
         </div>
       </nav>
     </header>
