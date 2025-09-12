@@ -1,14 +1,14 @@
 "use client";
-type Props = {
-    onClick: () => void;
+import "./button.css";
+type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     text: string;
     className?: string;
 }
 
-export default function Button({ onClick, text, className }: Props) {
+export default function Button({ text, className, ...props }: Props) {
     return (
         <div>
-            <button onClick={onClick} className={className ?? "header_nav_button"}>
+            <button className={className ?? "header_nav_button header_nav_button_login"} {...props}>
                 {text}
             </button>
         </div>

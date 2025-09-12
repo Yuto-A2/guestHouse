@@ -24,7 +24,7 @@ export default function Signup() {
   return (
     <>
       <SectionTitle sectionTitle="Create Account" />
-      <SignupForm onSubmit={handleSignup} text="Sign Up" />
+      <SignupForm onSubmit={handleSignup} text="Sign Up" fieldItems={["fName", "lName", "email", "phone_num", "password"]} />
     </>
   );
 }
