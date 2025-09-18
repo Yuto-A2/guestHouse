@@ -30,6 +30,6 @@ input {
     height: 96x;
 }
 
-input:nth-child(10) {
+input:nth-child(12) {
     margin-bottom: 8px;
 }

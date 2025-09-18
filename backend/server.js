@@ -54,6 +54,11 @@ passport.use(Guest.createStrategy());
 passport.serializeUser(Guest.serializeUser());
 passport.deserializeUser(Guest.deserializeUser());
 
+app.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+})
+
 // --- routes ---
 app.get('/', (req, res) => {
   res.json({ message: 'Guesthouse API Server is running!' });

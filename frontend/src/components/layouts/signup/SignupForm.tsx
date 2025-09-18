@@ -1,7 +1,7 @@
 import "./signupform.css";
 import Button from "../button/Button";
 
-type fieldItems = "fName" | "lName" | "email" | "phone_num" | "password";
+type fieldItems = "fName" | "lName" | "email" | "phone_num" | "password" | "confirmPassword";
 
 type Props = {
     onSubmit: (data: FormData) => void;
@@ -13,6 +13,14 @@ export default function SignupForm({ onSubmit, fieldItems, defaultValues, text }
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
+
+        const password = formData.get("password");
+        const confirmPassword = formData.get("confirmPassword");
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match!");
+            return;
+        }
         onSubmit(formData);
     }
 
@@ -77,6 +85,18 @@ export default function SignupForm({ onSubmit, fieldItems, defaultValues, text }
                                     name="password"
                                     id="password"
                                     defaultValue={defaultValues?.password}
+                                />
+                            </>
+                        )}
+
+                            {fieldItems.includes("confirmPassword") && (
+                            <>
+                                <label htmlFor="confirmPassword">Confirm Password:</label>
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    id="confirmPassword"
+                                    defaultValue={defaultValues?.confirmPassword}
                                 />
                             </>
                         )}
