@@ -3,15 +3,15 @@ import Button from "../layouts/button/Button";
 import { useNavigate } from "react-router-dom";
 import "./property.css";
 
-export type Property = {
-    id: string;
+export type PropertyList = {
+    _id: string;
     address: string;
     property_type: string;
 };
 
 export default function Property() {
     const navigate = useNavigate();
-    const [properties, setProperties] = useState<Property[]>([]);
+    const [properties, setProperties] = useState<PropertyList[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -45,10 +45,10 @@ export default function Property() {
             <div className="property">
                 <ul className="property_list">
                     {properties.map((property) => (
-                        <li key={property.id}>
+                        <li key={property._id}>
                             <p>Address: {property.address}</p>
                             <p>Type: {property.property_type}</p>
-                            <Button onClick={() => navigate(`/detail/${property.id}`)} text="Detail" className="header_nav_button" />
+                            <Button onClick={() => navigate(`/detail/${property._id}`)} text="Detail" className="header_nav_button" />
                         </li>
                     ))}
                 </ul>
