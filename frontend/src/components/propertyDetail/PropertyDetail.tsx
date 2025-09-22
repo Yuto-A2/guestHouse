@@ -1,5 +1,8 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
+import MyCalendar from "../layouts/calendar/MyCalendar"
+import Button from "../layouts/button/Button"
+import "./propertyDetail.css"
 
 export default function PropertyDetail() {
     type Property = {
@@ -25,9 +28,16 @@ export default function PropertyDetail() {
     if (!property) return <div>Loading...</div>;
 
     return (
-        <div>
+        <div className="property-detail">
+            <p className="bold">The address:</p>
             <p>{property.address}</p>
+            <p className="bold">The property type:</p>
             <p>{property.property_type}</p>
+            <p className="bold">Please select a date:</p>
+            <div className="calendar-container">
+            <MyCalendar />
+            </div>
+            <Button text="Reserve the house" className="header_nav_button" />
         </div>
     )
 }
