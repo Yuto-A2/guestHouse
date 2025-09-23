@@ -20,7 +20,11 @@ const dbUrl = process.env.MONGO_URL;
 const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
-app.use(cors({ origin: '*' })); 
+const FRONT = 'http://localhost:3000';
+app.use(cors({
+  origin: FRONT,
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
