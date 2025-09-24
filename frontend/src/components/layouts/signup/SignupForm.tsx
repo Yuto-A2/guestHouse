@@ -1,110 +1,124 @@
 import "./signupform.css";
 import Button from "../button/Button";
+import { useState } from "react";
 
-type fieldItems = "fName" | "lName" | "email" | "phone_num" | "password" | "confirmPassword";
+type FieldItems = "fname" | "lname" | "email" | "phone_num" | "password" | "confirmPassword";
 
 type Props = {
-    onSubmit: (data: FormData) => void;
-    fieldItems: fieldItems[];
-    text: string;
-    defaultValues?: Partial<Record<fieldItems, string>>;
-}
+  onSubmit: (data: FormData) => void;
+  fieldItems: FieldItems[];
+  text: string;
+  defaultValues?: Partial<Record<FieldItems, string>>;
+};
+
 export default function SignupForm({ onSubmit, fieldItems, defaultValues, text }: Props) {
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
+  const [error, setError] = useState("");
 
-        const password = formData.get("password");
-        const confirmPassword = formData.get("confirmPassword");
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError("");
+    const formData = new FormData(e.currentTarget);
 
-        if (password !== confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
-        onSubmit(formData);
+    if (fieldItems.includes("confirmPassword")) {
+      const password = String(formData.get("password") ?? "");
+      const confirmPassword = String(formData.get("confirmPassword") ?? "");
+      if (password !== confirmPassword) {
+        setError("Passwords do not match!");
+        return;
+      }
     }
 
-    return (
-        <form action="" onSubmit={handleSubmit}>
-            <div className='cardContainer'>
-                <div className="cardBox">
-                    <div className="cardItems">
-                        {fieldItems.includes("fName") && (
-                            <>
-                                <label htmlFor="fname">First Name:</label>
-                                <input
-                                    type="text"
-                                    name="fname"
-                                    id="fname"
-                                    defaultValue={defaultValues?.fName}
-                                />
-                            </>
-                        )}
+    onSubmit(formData);
+  };
 
-                        {fieldItems.includes("lName") && (
-                            <>
-                                <label htmlFor="lname">Last Name:</label>
-                                <input
-                                    type="text"
-                                    name="lname"
-                                    id="lname"
-                                    defaultValue={defaultValues?.lName}
-                                />
-                            </>
-                        )}
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="cardContainer">
+        <div className="cardBox">
+          <div className="cardItems">
+            {fieldItems.includes("fname") && (
+              <>
+                <label htmlFor="fname">First Name:</label>
+                <input
+                  type="text"
+                  name="fname"
+                  id="fname"
+                  defaultValue={defaultValues?.fname}
+                  autoComplete="given-name"
+                />
+              </>
+            )}
 
-                        {fieldItems.includes("email") && (
-                            <>
-                                <label htmlFor="email">Email:</label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    defaultValue={defaultValues?.email}
-                                />
-                            </>
-                        )}
+            {fieldItems.includes("lname") && (
+              <>
+                <label htmlFor="lname">Last Name:</label>
+                <input
+                  type="text"
+                  name="lname"
+                  id="lname"
+                  defaultValue={defaultValues?.lname}
+                  autoComplete="family-name"
+                />
+              </>
+            )}
 
-                        {fieldItems.includes("phone_num") && (
-                            <>
-                                <label htmlFor="phone_num">Phone Number:</label>
-                                <input
-                                    type="tel"
-                                    name="phone_num"
-                                    id="phone_num"
-                                    defaultValue={defaultValues?.phone_num}
-                                />
-                            </>
-                        )}
+            {fieldItems.includes("email") && (
+              <>
+                <label htmlFor="email">Email:</label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  defaultValue={defaultValues?.email}
+                  autoComplete="username"
+                />
+              </>
+            )}
 
-                        {fieldItems.includes("password") && (
-                            <>
-                                <label htmlFor="password">Password:</label>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    id="password"
-                                    defaultValue={defaultValues?.password}
-                                />
-                            </>
-                        )}
+            {fieldItems.includes("phone_num") && (
+              <>
+                <label htmlFor="phone_num">Phone Number:</label>
+                <input
+                  type="tel"
+                  name="phone_num"
+                  id="phone_num"
+                  defaultValue={defaultValues?.phone_num}
+                  autoComplete="tel"
+                />
+              </>
+            )}
 
-                            {fieldItems.includes("confirmPassword") && (
-                            <>
-                                <label htmlFor="confirmPassword">Confirm Password:</label>
-                                <input
-                                    type="password"
-                                    name="confirmPassword"
-                                    id="confirmPassword"
-                                    defaultValue={defaultValues?.confirmPassword}
-                                />
-                            </>
-                        )}
+            {fieldItems.includes("password") && (
+              <>
+                <label htmlFor="password">Password:</label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  defaultValue={defaultValues?.password}
+                  autoComplete={fieldItems.includes("confirmPassword") ? "new-password" : "current-password"}
+                />
+              </>
+            )}
 
-                        <Button type="submit" text={text} className="header_nav_button"/>
-                    </div>
-                </div>
-            </div>
-        </form>
-    );
+            {fieldItems.includes("confirmPassword") && (
+              <>
+                <label htmlFor="confirmPassword">Confirm Password:</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  defaultValue={defaultValues?.confirmPassword}
+                  autoComplete="new-password"
+                />
+              </>
+            )}
+
+            {error && <p className="setError">{error}</p>}
+            <Button type="submit" text={text} className="header_nav_button" />
+          </div>
+        </div>
+      </div>
+    </form>
+  );
 }

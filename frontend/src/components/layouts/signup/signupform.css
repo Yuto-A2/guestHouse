@@ -33,3 +33,9 @@ input {
 input:nth-child(12) {
     margin-bottom: 8px;
 }
+
+.setError {
+    color: red;
+    font-size: 1.2rem;
+    text-align: center;
+}

@@ -1,17 +1,18 @@
 // LoginAuth.tsx
-import { FormEvent, useState } from "react";
-import Button from "../layouts/button/Button"; 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SignupForm from "../layouts/signup/SignupForm";
+import SectionTitle from "../layouts/title/SectionTitle";
 
 export default function LoginAuth() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
+  const handleLoginSubmit = async (fd: FormData) => {
+    const email = String(fd.get("email") ?? "");
+    const password = String(fd.get("password") ?? "");
+
     setError("");
     setLoading(true);
     try {
@@ -19,7 +20,7 @@ export default function LoginAuth() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
@@ -28,58 +29,28 @@ export default function LoginAuth() {
       }
 
       const data = await res.json();
-      console.log("Logged in:", data.user);
-
       localStorage.setItem("auth_user", JSON.stringify(data.user));
 
-      // 例: 画面遷移
-      navigate("/", { replace: true });
-
-      alert("Login successful");
+      const userId = data?.user?.id;
+      if (!userId) throw new Error("User ID not found");
+      navigate(`/${userId}`, { replace: true });
     } catch (err: any) {
-      setError(err.message ?? "Login failed");
+      setError(err?.message ?? "Login failed");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <div style={{ maxWidth: 380, margin: "2rem auto" }}>
-      <h2 className="text-xl font-bold mb-3">Login</h2>
+    <div>
+      <SectionTitle sectionTitle="Login" />
+      <SignupForm
+        text={loading ? "Logging in..." : "Login"}
+        fieldItems={["email", "password"]}
+        onSubmit={handleLoginSubmit}
+      />
 
-      <form onSubmit={onSubmit} className="flex flex-col gap-3">
-        <label className="flex flex-col gap-1">
-          <span>Email</span>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 rounded"
-            autoComplete="username"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span>Password</span>
-          <input
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 rounded"
-            autoComplete="current-password"
-          />
-        </label>
-
-        {error && <p className="text-red-600 text-sm">{error}</p>}
-
-        <Button
-          text={loading ? "Logging in..." : "Login"}
-          className="header_nav_button header_nav_button_login"
-          disabled={loading}
-        />
-      </form>
+      {error && <p>{error}</p>}
     </div>
   );
 }
