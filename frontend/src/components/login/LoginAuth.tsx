@@ -31,6 +31,9 @@ export default function LoginAuth() {
       const data = await res.json();
       localStorage.setItem("auth_user", JSON.stringify(data.user));
 
+      localStorage.setItem("isLoggedIn", "true");
+      window.dispatchEvent(new Event("auth-change"));
+
       const userId = data?.user?.id;
       if (!userId) throw new Error("User ID not found");
       navigate(`/${userId}`, { replace: true });
@@ -49,7 +52,6 @@ export default function LoginAuth() {
         fieldItems={["email", "password"]}
         onSubmit={handleLoginSubmit}
       />
-
       {error && <p>{error}</p>}
     </div>
   );

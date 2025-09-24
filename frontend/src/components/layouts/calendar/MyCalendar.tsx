@@ -64,7 +64,7 @@ export default function MyCalendar() {
 
       <div>
  
-        <Button
+        {/* <Button
           text="Continue"
           onClick={() => {
             if (range) {
@@ -72,7 +72,7 @@ export default function MyCalendar() {
             }
           }}
           className="header_nav_button header_nav_button_login"
-        />
+        /> */}
       </div>
     </div>
   );
