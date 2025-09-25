@@ -61,19 +61,6 @@ export default function MyCalendar() {
           <p>Please select your check-in and check-out dates.</p>
         )}
       </div>
-
-      <div>
- 
-        {/* <Button
-          text="Continue"
-          onClick={() => {
-            if (range) {
-              console.log("Selected range:", range);
-            }
-          }}
-          className="header_nav_button header_nav_button_login"
-        /> */}
-      </div>
     </div>
   );
 }
