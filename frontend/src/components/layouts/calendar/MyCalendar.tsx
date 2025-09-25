@@ -5,14 +5,83 @@ import Button from "../button/Button";
 
 type Range = [Date, Date] | null;
 
-export default function MyCalendar() {
+type MyCalendarProps = {
+  propertyId: string; 
+};
+
+function toYYYYMMDD(date: Date) {
+  // UTC, only date part
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(date.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+export default function MyCalendar({ propertyId }: MyCalendarProps) {
   const [range, setRange] = useState<Range>(null);
+  const [error, setError] = useState("");
+  const [ok, setOk] = useState("");
 
   const handleChange: CalendarProps["onChange"] = (nextValue) => {
+    setOk("");
+    setError("");
     if (Array.isArray(nextValue) && nextValue[0] && nextValue[1]) {
       setRange([nextValue[0] as Date, nextValue[1] as Date]);
     } else {
       setRange(null);
+    }
+  };
+
+  const submitReservation = async () => {
+    try {
+      setOk("");
+      setError("");
+
+      if (!range) {
+        setError("チェックインとチェックアウトを選択してください。");
+        return;
+      }
+
+      // 1泊以上チェック（チェックアウト日は「空き」扱い）
+      const nights = Math.round(
+        (range[1].getTime() - range[0].getTime()) / (1000 * 60 * 60 * 24)
+      );
+      if (nights < 1) {
+        setError("1泊以上で選択してください。");
+        return;
+      }
+
+      const payload = {
+        propertyId,
+        start_date: toYYYYMMDD(range[0]),
+        end_date: toYYYYMMDD(range[1]),
+      };
+
+      const res = await fetch("http://localhost:5000/reservations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // Cookieセッションを送る
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 401) {
+        throw new Error("ログインしてください（401）");
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(data?.error || "予約に失敗しました");
+      }
+
+      if (!data?._id) {
+        // APIの返却仕様に合わせて必要なら調整
+        setOk("予約が完了しました。");
+      } else {
+        setOk("予約が完了しました。予約ID: " + data._id);
+      }
+      // 成功後、選択解除するなら
+      // setRange(null);
+    } catch (err: any) {
+      setError(err?.message ?? "Reservation failed");
     }
   };
 
@@ -60,7 +129,16 @@ export default function MyCalendar() {
         ) : (
           <p>Please select your check-in and check-out dates.</p>
         )}
+        {ok && <p style={{ color: "green" }}>{ok}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
+
+      <Button
+        text="Reserve the house"
+        className="header_nav_button"
+        onClick={submitReservation}
+        disabled={!range || nights < 1}
+      />
     </div>
   );
 }

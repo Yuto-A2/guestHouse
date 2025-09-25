@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react"
 import MyCalendar from "../layouts/calendar/MyCalendar"
-import Button from "../layouts/button/Button"
 import "./propertyDetail.css"
 
 export default function PropertyDetail() {
@@ -35,9 +34,8 @@ export default function PropertyDetail() {
             <p>{property.property_type}</p>
             <p className="bold">Please select a date:</p>
             <div className="calendar-container">
-            <MyCalendar />
+            <MyCalendar propertyId={property.id} />
             </div>
-            <Button text="Reserve the house" className="header_nav_button" />
         </div>
     )
 }
