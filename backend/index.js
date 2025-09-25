@@ -17,23 +17,47 @@ const Guest = require('./models/guest');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dbUrl = process.env.MONGO_URL;
-const secret = process.env.SESSION_SECRET
+const secret = process.env.SESSION_SECRET;
 
-// --- basic middlewares ---
-const FRONT = 'http://localhost:3000';
+// --- CORS設定をVercel用に修正 ---
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001', 
+  'https://your-frontend.vercel.app', // 実際のフロントエンドURL
+];
+
 app.use(cors({
-  origin: FRONT,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// --- MongoDB接続を関数化 ---
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb) {
+    return cachedDb;
+  }
+  
+  const connection = await mongoose.connect(dbUrl);
+  cachedDb = connection;
+  return connection;
+}
 
 // --- session store & config---
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60, 
 });
-store.on('error', (e) => console.log('SESSION STORE ERROR', e));
 
 const sessionConfig = {
   store,
@@ -43,12 +67,11 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true,          
+    secure: process.env.NODE_ENV === 'production',
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
 };
 
-// --- apply session THEN passport（
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -68,21 +91,36 @@ app.get('/', (req, res) => {
   res.json({ message: 'Guesthouse API Server is running!' });
 });
 
+app.get('/api', (req, res) => {
+  res.json({ message: 'API endpoint working!' });
+});
+
 app.use('/properties', propertyRoutes);
 app.use('/guests', guestRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/guests/:id/reviews', reviewRoutes);
 
-// --- db & listen ---
-mongoose
-  .connect(dbUrl)
-  .then(() => {
-    console.log('MongoDB connected');
-    app.listen(PORT, () => {
-      console.log(`Server listening on http://localhost:${PORT}`);
+// --- Vercel用のハンドラー ---
+app.use((req, res, next) => {
+  connectToDatabase()
+    .then(() => next())
+    .catch(next);
+});
+
+// --- Vercelのexport ---
+module.exports = app;
+
+// --- ローカル開発用 ---
+if (process.env.NODE_ENV !== 'production') {
+  const port = PORT;
+  connectToDatabase()
+    .then(() => {
+      app.listen(port, () => {
+        console.log(`Server listening on http://localhost:${port}`);
+      });
+    })
+    .catch((err) => {
+      console.error('MongoDB connection error:', err.message);
+      process.exit(1);
     });
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err.message);
-    process.exit(1);
-  });
+}

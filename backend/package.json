@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-     "start": "node index.js",
-    "build": "echo 'No build step required'",
+    "start": "node index.js",
+    "build": "echo 'Build complete'",
     "dev": "nodemon index.js",
     "seed:property": "node seeds/property.js",
     "seed:guest": "node seeds/guest.js",
@@ -31,5 +31,8 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
