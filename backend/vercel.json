@@ -2,18 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "index.js",
+      "src": "server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/index.js"
+      "dest": "/server.js"
     }
-  ],
-  "env": {
-    "MONGO_URL": "@mongo_url",
-    "SESSION_SECRET": "@session_secret"
-  }
+  ]
 }
