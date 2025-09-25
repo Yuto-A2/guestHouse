@@ -6,7 +6,7 @@ import Button from "../button/Button";
 type Range = [Date, Date] | null;
 
 type MyCalendarProps = {
-  propertyId: string; 
+  propertyId: string;
 };
 
 function toYYYYMMDD(date: Date) {
@@ -38,16 +38,16 @@ export default function MyCalendar({ propertyId }: MyCalendarProps) {
       setError("");
 
       if (!range) {
-        setError("チェックインとチェックアウトを選択してください。");
+        setError("Please choose check-in and check-out dates.");
         return;
       }
 
-      // 1泊以上チェック（チェックアウト日は「空き」扱い）
+      // Check at least 1 night
       const nights = Math.round(
         (range[1].getTime() - range[0].getTime()) / (1000 * 60 * 60 * 24)
       );
       if (nights < 1) {
-        setError("1泊以上で選択してください。");
+        setError("Please select at least 1 night.");
         return;
       }
 
@@ -60,26 +60,23 @@ export default function MyCalendar({ propertyId }: MyCalendarProps) {
       const res = await fetch("http://localhost:5000/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include", // Cookieセッションを送る
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
       if (res.status === 401) {
-        throw new Error("ログインしてください（401）");
+        throw new Error("Please log in to make a reservation.");
       }
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        throw new Error(data?.error || "予約に失敗しました");
+        throw new Error(data?.error || "Reservation failed");
       }
 
       if (!data?._id) {
-        // APIの返却仕様に合わせて必要なら調整
-        setOk("予約が完了しました。");
+        setOk("Reservation completed.");
       } else {
-        setOk("予約が完了しました。予約ID: " + data._id);
+        setOk("Reservation completed. Reservation ID: " + data._id);
       }
-      // 成功後、選択解除するなら
-      // setRange(null);
     } catch (err: any) {
       setError(err?.message ?? "Reservation failed");
     }
@@ -96,11 +93,11 @@ export default function MyCalendar({ propertyId }: MyCalendarProps) {
   const nights =
     range
       ? Math.max(
-          0,
-          Math.round(
-            (range[1].getTime() - range[0].getTime()) / (1000 * 60 * 60 * 24)
-          )
+        0,
+        Math.round(
+          (range[1].getTime() - range[0].getTime()) / (1000 * 60 * 60 * 24)
         )
+      )
       : 0;
 
   return (
