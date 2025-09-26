@@ -49,7 +49,7 @@ export default function Header() {
       </h1>
 
       <nav className="header__nav">
-        <ul className="header_nav_list">
+        <ul className={user ? "header_nav_active" : "header_nav_list"}>
           <li><Link to="/booking">My Book</Link></li>
           <li><Link to="/about">My Profile</Link></li>
         </ul>

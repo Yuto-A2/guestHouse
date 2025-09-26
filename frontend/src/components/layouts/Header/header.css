@@ -4,6 +4,7 @@
 
 .header__title a {
     text-decoration: none;
+    color: black;
 }
 
 
@@ -27,12 +28,22 @@
     display: none;
 }
 
-.header_nav_list a {
+.header_nav_active li {
+    display: block;
+}
+
+.header_nav_active li:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 60%;
+}
+
+.header_nav_list a, .header_nav_active a {
     text-decoration: none;
     color: black;
 }
 
-.header_nav_list {
+.header_nav_list, .header_nav_active {
     list-style: none;
     display: flex;
     gap: 16px;
