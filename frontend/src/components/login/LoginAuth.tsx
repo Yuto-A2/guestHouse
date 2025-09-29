@@ -23,19 +23,30 @@ export default function LoginAuth() {
         body: JSON.stringify({ email, password }),
       });
 
+      const body = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || "Login failed");
+        throw new Error((body as any)?.error || "Login failed");
       }
 
-      const data = await res.json();
-      localStorage.setItem("auth_user", JSON.stringify(data.user));
+      const rawUser: any = (body as any)?.user ?? body;
 
+      const userId: string | undefined = rawUser?._id ?? rawUser?.id;
+
+      if (!userId) {
+        console.error("Unexpected login response:", body);
+        throw new Error("User ID not found in response");
+      }
+
+      const normalized = {
+        id: userId,
+        name: `${rawUser?.fname ?? ""} ${rawUser?.lname ?? ""}`.trim(),
+        email: rawUser?.email ?? "",
+      };
+      localStorage.setItem("user", JSON.stringify(normalized));
       localStorage.setItem("isLoggedIn", "true");
       window.dispatchEvent(new Event("auth-change"));
-
-      const userId = data?.user?.id;
-      if (!userId) throw new Error("User ID not found");
+      // Navigate to dashboard page after login
       navigate(`/${userId}`, { replace: true });
     } catch (err: any) {
       setError(err?.message ?? "Login failed");
@@ -52,7 +63,7 @@ export default function LoginAuth() {
         fieldItems={["email", "password"]}
         onSubmit={handleLoginSubmit}
       />
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: "crimson" }}>{error}</p>}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { useState } from "react";
 import Calendar, { CalendarProps } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Button from "../button/Button";
+import "./myCalendar.css";
 
 type Range = [Date, Date] | null;
 
@@ -129,13 +130,14 @@ export default function MyCalendar({ propertyId }: MyCalendarProps) {
         {ok && <p style={{ color: "green" }}>{ok}</p>}
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
-
-      <Button
-        text="Reserve the house"
-        className="header_nav_button"
-        onClick={submitReservation}
-        disabled={!range || nights < 1}
-      />
+      <div className="buttonContainer">
+        <Button
+          text="Reserve the house"
+          className="header_nav_button"
+          onClick={submitReservation}
+          disabled={!range || nights < 1}
+        />
+      </div>
     </div>
   );
 }

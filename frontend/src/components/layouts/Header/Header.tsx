@@ -4,18 +4,29 @@ import { Link, useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import { useEffect, useState } from "react";
 
+type AuthUser = { id: string; name?: string } | null;
+
 export default function Header() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<boolean>(
-    typeof window !== "undefined" && localStorage.getItem("isLoggedIn") === "true"
-  );
+
+  // Manage user state with localStorage synchronization
+  const [user, setUser] = useState<AuthUser>(() => {
+    if (typeof window === "undefined") return null;
+    const raw = localStorage.getItem("user");
+    return raw ? JSON.parse(raw) : null;
+  });
+
+  const isLoggedIn = !!user;
 
   useEffect(() => {
-    const read = () => setUser(localStorage.getItem("isLoggedIn") === "true");
+    const read = () => {
+      const raw = localStorage.getItem("user");
+      setUser(raw ? JSON.parse(raw) : null);
+    };
 
-    const onAuthChange = () => read();             
-    const onStorage = (e: StorageEvent) => {        
-      if (e.key === "isLoggedIn") read();
+    const onAuthChange = () => read();
+    const onStorage = (e: StorageEvent) => {
+      if (!e.key || e.key === "user" || e.key === "isLoggedIn") read();
     };
 
     window.addEventListener("auth-change", onAuthChange);
@@ -29,15 +40,16 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       await fetch("http://localhost:5000/guests/logout", {
-        method: "GET",           
+        method: "GET",
         credentials: "include",
       });
     } catch (err) {
       console.error("Logout failed:", err);
     } finally {
       localStorage.setItem("isLoggedIn", "false");
+      localStorage.removeItem("user");
       window.dispatchEvent(new Event("auth-change"));
-      setUser(false);
+      setUser(null);
       navigate("/");
     }
   };
@@ -49,15 +61,23 @@ export default function Header() {
       </h1>
 
       <nav className="header__nav">
-        <ul className={user ? "header_nav_active" : "header_nav_list"}>
-          <li><Link to="/booking">My Book</Link></li>
-          <li><Link to="/about">My Profile</Link></li>
+        <ul className={isLoggedIn ? "header_nav_active" : "header_nav_list"}>
+          <li>
+            <Link to={isLoggedIn ? `/booking/${user!.id}` : "/booking"}>My Book</Link>
+          </li>
+          <li>
+            <Link to="/about">My Profile</Link>
+          </li>
         </ul>
 
         <div className="header_nav_buttons">
-          <Button onClick={() => navigate("/signup")} text="Sign up" className="header_nav_button" />
+          <Button
+            onClick={() => navigate("/signup")}
+            text="Sign up"
+            className="header_nav_button"
+          />
 
-          {user ? (
+          {isLoggedIn ? (
             <Button
               onClick={handleLogout}
               text="Logout"
