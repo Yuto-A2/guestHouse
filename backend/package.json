@@ -5,7 +5,6 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "echo 'Build complete'",
     "seed:property": "node seeds/property.js",
     "seed:guest": "node seeds/guest.js",
     "seed:reservation": "node seeds/reservation.js",
