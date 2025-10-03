@@ -20,9 +20,9 @@ export default function Property() {
             try {
                 setLoading(true);
                 // const response = await fetch("http://localhost:5000/properties", {
-                const response = await fetch("/properties", {
+                const response = await fetch("https://guest-house-ecru.vercel.app/properties", {
                     method: "GET",
-                    // headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json" },
                 });
                 const data = await response.json();
                 if (!response.ok) throw new Error(`HTTP ${response.status}: ${data.message}`);

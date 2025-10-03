@@ -12,7 +12,7 @@ export default function Signup() {
     try {
       // Signup API
       // const res = await fetch("http://localhost:5000/guests", {
-      const res = await fetch("/guests", {
+      const res = await fetch("https://guest-house-ecru.vercel.app/guests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -24,7 +24,7 @@ export default function Signup() {
 
       // Login API (Auto Login)
       // const loginRes = await fetch("http://localhost:5000/guests/login", {
-      const loginRes = await fetch("/guests/login", {
+      const loginRes = await fetch("https://guest-house-ecru.vercel.app/guests/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
