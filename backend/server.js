@@ -21,9 +21,15 @@ const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
 // const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
+// app.use(cors({
+//   origin: FRONT,
+//   credentials: true,
+// }));
+
 app.use(cors({
   origin: "*"
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -42,7 +48,7 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true,          
+    secure: true,          
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
 };
