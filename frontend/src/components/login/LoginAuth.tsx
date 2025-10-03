@@ -16,7 +16,8 @@ export default function LoginAuth() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/guests/login", {
+      // const res = await fetch("http://localhost:5000/guests/login", {
+      const res = await fetch("https://guest-house-ecru.vercel.app/guests/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

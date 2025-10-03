@@ -11,7 +11,8 @@ export default function Signup() {
     const payload = Object.fromEntries(fd.entries()) as Record<string, string>;
     try {
       // Signup API
-      const res = await fetch("http://localhost:5000/guests", {
+      // const res = await fetch("http://localhost:5000/guests", {
+      const res = await fetch("https://guest-house-ecru.vercel.app/guests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -22,7 +23,8 @@ export default function Signup() {
       }
 
       // Login API (Auto Login)
-      const loginRes = await fetch("http://localhost:5000/guests/login", {
+      // const loginRes = await fetch("http://localhost:5000/guests/login", {
+      const loginRes = await fetch("https://guest-house-ecru.vercel.app/guests/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -72,7 +74,7 @@ export default function Signup() {
       />
 
       {message && (
-        <p style ={{ color: "red", textAlign: "center"}}>
+        <p style={{ color: "red", textAlign: "center" }}>
           {message}
         </p>
       )}

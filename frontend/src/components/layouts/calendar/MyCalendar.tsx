@@ -58,7 +58,8 @@ export default function MyCalendar({ propertyId }: MyCalendarProps) {
         end_date: toYYYYMMDD(range[1]),
       };
 
-      const res = await fetch("http://localhost:5000/reservations", {
+      // const res = await fetch("http://localhost:5000/reservations", {
+      const res = await fetch("https://guest-house-ecru.vercel.app/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

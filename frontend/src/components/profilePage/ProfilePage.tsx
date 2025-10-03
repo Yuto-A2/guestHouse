@@ -13,9 +13,10 @@ export default function ProfilePage() {
     const { id } = useParams();
     const [user, setUser] = useState<Guest | null>(null);
     useEffect(() => {
-        // Fetch user details using the id
+        // Fetch user details using the idconst 
         const fetchUserDetails = async () => {
-            const response = await fetch(`http://localhost:5000/guests/${id}`);
+            // const response = await fetch(`http://localhost:5000/guests/${id}`);
+            const response = await fetch(`https://guest-house-ecru.vercel.app/guests/${id}`);
             const data = await response.json();
             console.log("Fetched data:", data);
             setUser(data);

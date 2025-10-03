@@ -39,7 +39,8 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:5000/guests/logout", {
+      // await fetch("http://localhost:5000/guests/logout", {
+      await fetch("https://guest-house-ecru.vercel.app/guests/logout", {
         method: "GET",
         credentials: "include",
       });

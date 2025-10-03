@@ -19,7 +19,8 @@ export default function Property() {
         const fetchProperties = async () => {
             try {
                 setLoading(true);
-                const response = await fetch("http://localhost:5000/properties", {
+                // const response = await fetch("http://localhost:5000/properties", {
+                const response = await fetch("https://guest-house-ecru.vercel.app/properties", {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                 });
