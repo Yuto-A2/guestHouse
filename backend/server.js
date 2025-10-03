@@ -11,60 +11,79 @@ const propertyRoutes = require('./routes/property');
 const guestRoutes = require('./routes/guest');
 const reservationRoutes = require('./routes/reservation');
 const reviewRoutes = require('./routes/reviews');
-const Guest = require('./models/guest'); 
+const Guest = require('./models/guest');
 
 // --- app & env ---
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dbUrl = process.env.MONGO_URL;
-const secret = process.env.SESSION_SECRET
+const secret = process.env.SESSION_SECRET || 'change-me';
+const isProd = process.env.NODE_ENV === 'production';
+
+// --- CORS origins ---
+const FRONT = [
+  'http://localhost:3000',
+  'https://guest-house-ecru.vercel.app', // 本番
+];
 
 // --- basic middlewares ---
-const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
 app.use(cors({
-  origin: FRONT,
-  credentials: true,
+  origin: FRONT,                  // 複数オリジン許可
+  credentials: true,              // クッキー/セッション送受信を許可
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// プリフライト(OPTIONS)に必ず応答
+app.options('*', (_req, res) => res.sendStatus(204));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- session store & config---
+// --- session store & config ---
+// 本番で secure クッキーを有効にするための設定（リバプロ配下）
+if (isProd) {
+  app.set('trust proxy', 1);
+}
+
 const store = MongoStore.create({
   mongoUrl: dbUrl,
-  touchAfter: 24 * 60 * 60, 
+  touchAfter: 24 * 60 * 60, // 1日1回だけ更新
 });
 store.on('error', (e) => console.log('SESSION STORE ERROR', e));
 
 const sessionConfig = {
   store,
   name: 'session',
-  secret: secret || 'change-me',
+  secret,
   resave: false,
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    // secure: true,          
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
+    secure: isProd,                 // 本番(https)でのみSecure
+    sameSite: isProd ? 'none' : 'lax', // クロスサイトでクッキーを使うなら 'none'
+    maxAge: 1000 * 60 * 60 * 24 * 7,   // 7 days
   },
 };
 
-// --- apply session THEN passport（
+// --- apply session THEN passport ---
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// --- passport strategy---
+// --- passport strategy ---
 passport.use(Guest.createStrategy());
 passport.serializeUser(Guest.serializeUser());
 passport.deserializeUser(Guest.deserializeUser());
 
+// request単位でログインユーザーを参照したい場合
 app.use((req, res, next) => {
-    res.locals.currentUser = req.user;
-    next();
-})
+  res.locals.currentUser = req.user;
+  next();
+});
 
 // --- routes ---
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.json({ message: 'Guesthouse API Server is running!' });
 });
 
