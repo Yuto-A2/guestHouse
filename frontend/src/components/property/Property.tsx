@@ -20,7 +20,7 @@ export default function Property() {
             try {
                 setLoading(true);
                 // const response = await fetch("http://localhost:5000/properties", {
-                const response = await fetch("https://guest-house-ecru.vercel.app/properties", {
+                const response = await fetch("/properties", {
                     method: "GET",
                     // headers: { "Content-Type": "application/json" },
                 });

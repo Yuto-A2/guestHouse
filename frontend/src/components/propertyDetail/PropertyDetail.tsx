@@ -16,7 +16,7 @@ export default function PropertyDetail() {
         // Fetch property details using the id
         const fetchPropertyDetails = async () => {
             // const response = await fetch(`http://localhost:5000/properties/${id}`);
-            const response = await fetch(`https://guest-house-ecru.vercel.app/properties/${id}`);
+            const response = await fetch(`/properties/${id}`);
             const data = await response.json();
             console.log("Fetched data:", data);
             setProperty(data);
