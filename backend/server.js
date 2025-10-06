@@ -23,15 +23,15 @@ const dbUrl = process.env.MONGO_URL;
 const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
-const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
-app.use(cors({
-  origin: FRONT,
-  credentials: true,
-}));
-
+// const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
 // app.use(cors({
-//   origin: "*"
+//   origin: FRONT,
+//   credentials: true,
 // }));
+
+app.use(cors({
+  origin: "*"
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
