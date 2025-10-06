@@ -67,7 +67,7 @@ export default function Header() {
             <Link to={isLoggedIn ? `/booking/${user!.id}` : "/booking"}>My Book</Link>
           </li>
           <li>
-            <Link to="/about">My Profile</Link>
+            <Link to={isLoggedIn ? `/about/${user!.id}` : "/booking"}>My Profile</Link>
           </li>
         </ul>
 

@@ -9,6 +9,7 @@ export default function ProfilePage() {
         id: string;
         fname: string;
         lname: string;
+        email: string;
     };
     const { id } = useParams();
     const [user, setUser] = useState<Guest | null>(null);

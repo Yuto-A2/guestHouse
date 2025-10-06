@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 // --- imports ---
 const express = require('express');
 const cors = require('cors');
@@ -5,13 +8,13 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
-require('dotenv').config();
-
 const propertyRoutes = require('./routes/property');
 const guestRoutes = require('./routes/guest');
 const reservationRoutes = require('./routes/reservation');
 const reviewRoutes = require('./routes/reviews');
 const Guest = require('./models/guest'); 
+const sanitize = require('mongo-sanitize');
+
 
 // --- app & env ---
 const app = express();
@@ -20,15 +23,15 @@ const dbUrl = process.env.MONGO_URL;
 const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
-// const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
-// app.use(cors({
-//   origin: FRONT,
-//   credentials: true,
-// }));
-
+const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
 app.use(cors({
-  origin: "*"
+  origin: FRONT,
+  credentials: true,
 }));
+
+// app.use(cors({
+//   origin: "*"
+// }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,18 +40,21 @@ app.use(express.urlencoded({ extended: true }));
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60, 
+  crypto: { secret: secret || 'thisshouldbeabettersecret!' }
 });
 store.on('error', (e) => console.log('SESSION STORE ERROR', e));
 
 const sessionConfig = {
   store,
   name: 'session',
-  secret: secret || 'change-me',
+  secret: secret || 'thisshouldbeabettersecret!',
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    secure: true,          
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
 };
@@ -64,9 +70,17 @@ passport.serializeUser(Guest.serializeUser());
 passport.deserializeUser(Guest.deserializeUser());
 
 app.use((req, res, next) => {
-    res.locals.currentUser = req.user;
-    next();
-})
+  if (req.body)   req.body   = sanitize(req.body);
+  if (req.params) req.params = sanitize(req.params);
+  if (req.query) {
+    const cleaned = sanitize({ ...req.query });
+    Object.keys(req.query).forEach(k => delete req.query[k]);
+    Object.assign(req.query, cleaned);
+  }
+  next();
+});
+
+
 
 // --- routes ---
 app.get('/', (req, res) => {
@@ -77,6 +91,23 @@ app.use('/properties', propertyRoutes);
 app.use('/guests', guestRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/guests/:id/reviews', reviewRoutes);
+
+app.use((req, res) => {
+  res.status(404).json({ error: 'Page Not Found', path: req.originalUrl });
+});
+
+app.use((err, req, res, next) => {
+  if (res.headersSent) return next(err);
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Oh No, Something Went Wrong!';
+  const payload = { error: message };
+
+  if (process.env.NODE_ENV === 'development') {
+    payload.stack = err.stack;
+  }
+  res.status(statusCode).json(payload);
+});
+
 
 // --- db & listen ---
 mongoose
