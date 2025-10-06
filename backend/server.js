@@ -29,9 +29,28 @@ const secret = process.env.SESSION_SECRET
 //   credentials: true,
 // }));
 
-app.use(cors({
-  origin: "*"
-}));
+// app.use(cors({
+//   origin: "*"
+// }));
+
+const FRONT = [
+  'http://localhost:3000',
+  'http://127.0.0.1:3000',
+  'https://guest-house-ecru.vercel.app', // ←使っている本番URLに合わせて調整
+];
+
+// fetch が credentials:'include' の時は origin を特定し、credentials:true
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      // 開発ツールやcurl等Originなしも許可
+      if (!origin) return cb(null, true);
+      if (FRONT.includes(origin)) return cb(null, true);
+      return cb(new Error(`Not allowed by CORS: ${origin}`), false);
+    },
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
