@@ -35,7 +35,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set('trust proxy', 1);
+// app.set('trust proxy', 1);
 
 
 // --- session store & config---
@@ -54,8 +54,8 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none', // 'lax' or 'strict' or 'none'
+    // secure: true,
+    // sameSite: 'none', // 'lax' or 'strict' or 'none'
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },

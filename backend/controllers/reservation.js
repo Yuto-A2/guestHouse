@@ -3,6 +3,7 @@ const Reservation = require('../models/reservation');
 module.exports.showReservation = async (req, res) => {
     try {
         const reservation = await Reservation.findById(req.params.id)
+            .select('start_date end_date')
             .populate({
                 path: 'guest',
                 select: 'fname lname email'
