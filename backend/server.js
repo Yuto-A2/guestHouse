@@ -12,7 +12,7 @@ const propertyRoutes = require('./routes/property');
 const guestRoutes = require('./routes/guest');
 const reservationRoutes = require('./routes/reservation');
 const reviewRoutes = require('./routes/reviews');
-const Guest = require('./models/guest'); 
+const Guest = require('./models/guest');
 const sanitize = require('mongo-sanitize');
 
 
@@ -23,15 +23,15 @@ const dbUrl = process.env.MONGO_URL;
 const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
-// const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app'];
-// app.use(cors({
-//   origin: FRONT,
-//   credentials: true,
-// }));
-
+const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app', 'https://guest-house-if7i.vercel.app'];
 app.use(cors({
-  origin: "*"
+  origin: FRONT,
+  credentials: true,
 }));
+
+// app.use(cors({
+//   origin: "*"
+// }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +39,7 @@ app.use(express.urlencoded({ extended: true }));
 // --- session store & config---
 const store = MongoStore.create({
   mongoUrl: dbUrl,
-  touchAfter: 24 * 60 * 60, 
+  touchAfter: 24 * 60 * 60,
   crypto: { secret: secret || 'thisshouldbeabettersecret!' }
 });
 store.on('error', (e) => console.log('SESSION STORE ERROR', e));
@@ -52,8 +52,8 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: true,
+    sameSite: 'none', // 'lax' or 'strict' or 'none'
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
@@ -70,7 +70,7 @@ passport.serializeUser(Guest.serializeUser());
 passport.deserializeUser(Guest.deserializeUser());
 
 app.use((req, res, next) => {
-  if (req.body)   req.body   = sanitize(req.body);
+  if (req.body) req.body = sanitize(req.body);
   if (req.params) req.params = sanitize(req.params);
   if (req.query) {
     const cleaned = sanitize({ ...req.query });
