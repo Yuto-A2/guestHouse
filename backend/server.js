@@ -49,7 +49,7 @@ const sessionConfig = {
   name: 'session',
   secret: secret || 'thisshouldbeabettersecret!',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     httpOnly: true,
     secure: true,
