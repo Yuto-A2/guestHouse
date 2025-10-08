@@ -64,7 +64,7 @@ export default function Header() {
       <nav className="header__nav">
         <ul className={isLoggedIn ? "header_nav_active" : "header_nav_list"}>
           <li>
-            <Link to={isLoggedIn ? `/booking/${user!.id}` : "/booking"}>My Book</Link>
+            <Link to={isLoggedIn ? `/guests/${user!.id}/reservations` : "/booking"}>My Book</Link>
           </li>
           <li>
             <Link to={isLoggedIn ? `/about/${user!.id}` : "/booking"}>My Profile</Link>

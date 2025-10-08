@@ -19,4 +19,6 @@ router.route('/:id')
 .put(catchAsync(guest.updateGuest))
 .delete(catchAsync(guest.deleteGuest));
 
+router.get('/:guestId/reservations', catchAsync(guest.listReservationsByGuest));
+
 module.exports = router;

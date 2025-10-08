@@ -1,0 +1,24 @@
+/* 親はレイアウト用だけにする（枠と背景は外す） */
+.reservationContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* リストの余白とマーカーを消し、縦の間隔を作る */
+.reservationList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+/* 各予約ボックスの見た目は li に当てる */
+.reservationItem {
+  border: 1px solid #e5e7eb;        /* #cccでもOK */
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}

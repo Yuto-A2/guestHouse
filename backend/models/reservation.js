@@ -13,11 +13,13 @@ const ReservationSchema = new mongoose.Schema(
         },
         guest: {
             type: Schema.Types.ObjectId,
-            ref: 'Guest'
+            ref: 'Guest',
+            required: true,
         },
         property: {
             type: Schema.Types.ObjectId,
-            ref: 'Property'
+            ref: 'Property',
+            required: true,
         },
     },
     { timestamps: true }

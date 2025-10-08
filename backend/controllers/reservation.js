@@ -27,7 +27,6 @@ module.exports.showReservation = async (req, res) => {
     }
 };
 
-
 module.exports.createReservation = async (req, res) => {
     try {
         if (!req.user) {

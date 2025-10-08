@@ -1,4 +1,6 @@
 const Guest = require("../models/guest");
+const mongoose = require('mongoose');
+const Reservation = require('../models/reservation');
 const passport = require("passport");
 
 module.exports.Guests = async (req, res) => {
@@ -9,6 +11,53 @@ module.exports.Guests = async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 }
+
+module.exports.listReservationsByGuest = async (req, res) => {
+    try {
+        const { guestId } = req.params;
+        if (!mongoose.isValidObjectId(guestId)) {
+            return res.status(400).json({ error: 'Invalid guest ID' });
+        }
+
+        if (!req.user || !req.user._id.equals(guestId)) {
+            return res.status(403).json({ error: 'You do not have permission to view these reservations' });
+        }
+
+        const { from, to, page = 1, limit = 20 } = req.query;
+
+        const dateCond = {};
+        if (from) dateCond.$gte = new Date(from);
+        if (to) dateCond.$lte = new Date(to);
+
+        const where = { guest: guestId };
+        if (from || to) where.start_date = dateCond;
+
+        const pageNum = Math.max(parseInt(page, 10) || 1, 1);
+        const perPage = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+        const skip = (pageNum - 1) * perPage;
+
+        const [items, total] = await Promise.all([
+            Reservation.find(where)
+                .select('start_date end_date guest property createdAt updatedAt')
+                .populate({ path: 'guest', select: 'fname lname email' })
+                .populate({ path: 'property', model: 'Property', select: 'property_type address' })
+                .sort({ start_date: 1 })
+                .skip(skip)
+                .limit(perPage),
+            Reservation.countDocuments(where)
+        ]);
+
+        res.json({ 
+            data: items,
+            page: pageNum,
+            limit: perPage,
+            total,
+            hasMore: skip + items.length < total
+        });
+    } catch (e) {
+        return res.status(500).json({ error: e.message });
+    }
+};
 
 module.exports.Register = async (req, res) => {
     try {
