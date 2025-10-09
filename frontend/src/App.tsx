@@ -8,6 +8,7 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Book from "./pages/Book";
 import About from "./pages/About";
+import EditReservation from "./pages/EditReservation";
 import NotFound from "./pages/NotFound";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/detail/:id" element={<Detail />} />
           <Route path="/guests/:guestId/reservations" element={<Book />} />
           <Route path="/about/:id" element={<About />} />
+          <Route path="/reservations/:reservationId" element={<EditReservation />} />
         </Routes>
       </BrowserRouter>
     </>
