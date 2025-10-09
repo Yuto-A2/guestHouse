@@ -4,14 +4,14 @@ import MyCalendar from "../layouts/calendar/MyCalendar";
 import "./propertyDetail.css";
 
 type Property = {
-  _id?: string;          
-  id?: string;           
+  _id?: string;
+  id?: string;
   address: string;
   property_type: string;
 };
 
 export default function PropertyDetail() {
-  const { id } = useParams<{ id: string }>();  
+  const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<Property | null>(null);
   const [error, setError] = useState<string>("");
 
@@ -23,8 +23,12 @@ export default function PropertyDetail() {
 
     const fetchPropertyDetails = async () => {
       try {
-        // const res = await fetch(`http://localhost:5000/properties/${encodeURIComponent(id)}`);
-        const res = await fetch(`https://guest-house-ecru.vercel.app/properties/${encodeURIComponent(id)}`);
+        // const res = await fetch(`http://localhost:5000/properties/${encodeURIComponent(id)}`,;
+        const res = await fetch(`https://guest-house-ecru.vercel.app/properties/${encodeURIComponent(id)}`,
+          {
+            method: "GET",
+            credentials: "include"
+          });
         if (!res.ok) {
           const t = await res.text().catch(() => "");
           throw new Error(`Failed to load property: ${res.status} ${t}`);
