@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { formatDateCanada } from "../../utils/formatDateCanada";
 import SectionTitle from "../layouts/title/SectionTitle";
 import "./reservationDetail.css";
 
@@ -15,11 +16,6 @@ type Reservation = {
   createdAt?: string;
   updatedAt?: string;
 };
-
-const userLocale = navigator.language || "en-US";
-
-const fmtDateTime = (iso?: string) =>
-  iso ? new Date(iso).toLocaleString(userLocale) : "-";
 
 const displayGuest = (g: Reservation["guest"]) => {
   if (typeof g === "string") return g;
@@ -82,7 +78,7 @@ export default function GuestReservations() {
   }, [guestId]);
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-600">{error}</div>;
+  if (error) return <div>{error}</div>;
 
   return (
     <>
@@ -94,17 +90,17 @@ export default function GuestReservations() {
           <ul className="reservationList">
             {items.map((r) => (
               <li key={r._id} className="reservationItem">
-                <p><strong>Start:</strong> {fmtDateTime(r.start_date)}</p>
-                <p><strong>End:</strong> {fmtDateTime(r.end_date)}</p>
-                <p><strong>Guest:</strong> {displayGuest(r.guest)}</p>
-                <p><strong>Property:</strong> {displayProperty(r.property)}</p>
+                <p><strong>Check in:</strong> {formatDateCanada(r.start_date)}</p>
+                <p><strong>Check out:</strong> {formatDateCanada(r.end_date)}</p>
+                <p><strong>Address:</strong> {typeof r.property === "string" ? r.property: r.property?.address || "(unknown address)"}</p>
+                <p><strong>Property Type:</strong> {displayProperty(r.property)}</p>
                 <Link to={`/reservations/${r._id}`}>
                   Edit my reservation
                 </Link>
               </li>
             ))}
           </ul>
-        )}
+        )}  
       </div>
     </>
   );
