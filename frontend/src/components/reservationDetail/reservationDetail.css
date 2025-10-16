@@ -1,11 +1,9 @@
-/* 親はレイアウト用だけにする（枠と背景は外す） */
 .reservationContainer {
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
 }
 
-/* リストの余白とマーカーを消し、縦の間隔を作る */
 .reservationList {
   list-style: none;
   padding: 0;
@@ -14,11 +12,25 @@
   gap: 1rem;
 }
 
-/* 各予約ボックスの見た目は li に当てる */
 .reservationItem {
-  border: 1px solid #e5e7eb;        /* #cccでもOK */
+  border: 1px solid #e5e7eb;        
   border-radius: 12px;
   padding: 1rem;
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.deleteButton {
+  background-color: #ef4444; /* Red-500 */
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5rem;
+}
+
+.deleteButton:hover {
+  background-color: #dc2626; /* Red-600 */
 }

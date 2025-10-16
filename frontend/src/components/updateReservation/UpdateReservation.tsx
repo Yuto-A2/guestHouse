@@ -2,19 +2,20 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import SectionTitle from "../layouts/title/SectionTitle";
 import MyCalendar from "../layouts/calendar/MyCalendar";
+import "./updateReservation.css";
 
 type Reservation = {
   _id: string;
-  start_date: string; 
+  start_date: string;
   end_date: string;
 };
 
 const fromServerISOToLocalNoon = (iso: string) => {
-  const d = new Date(iso);                 
-  const y = d.getUTCFullYear();            
-  const m = d.getUTCMonth() + 1;           
-  const day = d.getUTCDate();              
-  return new Date(y, m - 1, day, 12, 0, 0, 0); 
+  const d = new Date(iso);
+  const y = d.getUTCFullYear();
+  const m = d.getUTCMonth() + 1;
+  const day = d.getUTCDate();
+  return new Date(y, m - 1, day, 12, 0, 0, 0);
 };
 
 const toYYYYMMDD_Toronto = (date: Date) => {
@@ -97,13 +98,15 @@ export default function UpdateReservation() {
   if (!resv) return <div>Reservation not found.</div>;
 
   return (
-    <div>
+    <>
       <SectionTitle sectionTitle="Edit Your Reservation" />
-      <MyCalendar
-        initialRange={initialRange}
-        onSubmit={handleUpdate}
-        submitLabel="Save changes"
-      />
-    </div>
+      <div className="update-reservation">
+        <MyCalendar
+          initialRange={initialRange}
+          onSubmit={handleUpdate}
+          submitLabel="Save changes"
+        />
+      </div>
+    </>
   );
 }
