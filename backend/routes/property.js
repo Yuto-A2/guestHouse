@@ -1,18 +1,27 @@
-const express = require ('express');
+// routes/property.js
+const express = require('express');
 const router = express.Router();
 const property = require('../controllers/property');
-const catchAsync = require('../utils/catchAsync');
+const { requireAuth } = require('../utils/Auth');
 
-router.get('/', catchAsync(property.index));
+// 一覧
+// GET /admin/properties
+router.get('/', requireAuth, property.index);
 
-router.get('/new', property.renderEditForm);
+// 作成
+// POST /admin/properties
+router.post('/', requireAuth, property.createProperties);
 
+// 取得
+// GET /admin/properties/:id
+router.get('/:id', requireAuth, property.showProperties);
 
-router.post('/', catchAsync(property.createProperties));
+// 更新
+// PUT /admin/properties/:id
+router.put('/:id', requireAuth, property.updateProperty);
 
-router.route('/:id')
-.get(catchAsync(property.showProperties))
-.put(catchAsync(property.updateProperty))
-.delete(catchAsync(property.deleteProperty));
+// 削除
+// DELETE /admin/properties/:id
+router.delete('/:id', requireAuth, property.deleteProperty);
 
 module.exports = router;

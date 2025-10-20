@@ -51,3 +51,6 @@
     padding: 0;
 }
 
+.header_nav_button_disabled {
+    display: none;
+}

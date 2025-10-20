@@ -27,6 +27,14 @@ export default function SignupForm({ onSubmit, fieldItems, defaultValues, text }
         return;
       }
     }
+    if (fieldItems.includes("confirmPassword")) {
+      const password = String(formData.get("password") ?? "");
+      const confirmPassword = String(formData.get("confirmPassword") ?? "");
+      if (password !== confirmPassword) {
+        setError("Passwords do not match!");
+        return;
+      }
+    }
 
     onSubmit(formData);
   };

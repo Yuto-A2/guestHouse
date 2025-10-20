@@ -1,0 +1,29 @@
+.userInfo {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid gray;
+    background-color: aliceblue;
+    padding: 8px;
+    margin: 16px;
+    border-radius: 12px;
+    width: 30%;
+    height: 16px;
+}
+
+.userInfo:disabled {
+    background-color: lightgray;
+}
+
+.labelAboutDetail {
+  margin: 8px;
+}
+
+.successMessage {
+  margin: 8px 0 12px;
+  font-weight: 600;
+  color: #1b7f34;        
+  background: #e9f7ef;   
+  border: 1px solid #bfe5cc;
+  border-radius: 8px;
+  padding: 8px 12px;
+}

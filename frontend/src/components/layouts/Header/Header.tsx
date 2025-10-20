@@ -58,7 +58,7 @@ export default function Header() {
   return (
     <header className="header">
       <h1 className="header__title">
-        <Link to="/">Rent House</Link>
+        <Link to={isLoggedIn ? `/${user!.id}` : "/"}>Rent House</Link>
       </h1>
 
       <nav className="header__nav">
@@ -72,11 +72,16 @@ export default function Header() {
         </ul>
 
         <div className="header_nav_buttons">
-          <Button
+         {isLoggedIn ? ( <Button
+            onClick={() => navigate("/signup")}
+            text="Sign up"
+            className="header_nav_button_disabled"
+          />) : ( <Button
             onClick={() => navigate("/signup")}
             text="Sign up"
             className="header_nav_button"
           />
+         )}
 
           {isLoggedIn ? (
             <Button

@@ -10,6 +10,8 @@ import Book from "./pages/Book";
 import About from "./pages/About";
 import EditReservation from "./pages/EditReservation";
 import NotFound from "./pages/NotFound";
+import UserDetail from "./pages/About";
+import Admin from "./pages/Admin";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
           <Route path="/guests/:guestId/reservations" element={<Book />} />
           <Route path="/about/:id" element={<About />} />
           <Route path="/reservations/:reservationId" element={<EditReservation />} />
+          <Route path="/about/:id" element={<UserDetail />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -12,6 +12,7 @@ const propertyRoutes = require('./routes/property');
 const guestRoutes = require('./routes/guest');
 const reservationRoutes = require('./routes/reservation');
 const reviewRoutes = require('./routes/reviews');
+const adminRoutes = require('./routes/auth');
 const Guest = require('./models/guest');
 const sanitize = require('mongo-sanitize');
 
@@ -89,10 +90,11 @@ app.get('/', (req, res) => {
   res.json({ message: 'Guesthouse API Server is running!' });
 });
 
-app.use('/properties', propertyRoutes);
+app.use('/admin/properties', propertyRoutes);
 app.use('/guests', guestRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/guests/:id/reviews', reviewRoutes);
+app.use('/admin', adminRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Page Not Found', path: req.originalUrl });
