@@ -12,6 +12,25 @@ module.exports.Guests = async (req, res) => {
     }
 }
 
+exports.getAdminInfo = (req, res) => {
+    try {
+        const u = req.user;
+        if (!u) return res.status(401).json({ error: 'Unauthorized' });
+
+        res.json({
+            _id: u._id,
+            fname: u.fname,
+            lname: u.lname,
+            email: u.email,
+            phone_num: u.phone_num,
+            role: u.role,
+        });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+};
+
+
 module.exports.listReservationsByGuest = async (req, res) => {
     try {
         const { guestId } = req.params;
@@ -47,7 +66,7 @@ module.exports.listReservationsByGuest = async (req, res) => {
             Reservation.countDocuments(where)
         ]);
 
-        res.json({ 
+        res.json({
             data: items,
             page: pageNum,
             limit: perPage,
@@ -127,23 +146,10 @@ module.exports.showGuests = async (req, res) => {
     }
 };
 
-module.exports.renderEditForm = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const guest = await Guest.findById(id);
-        if (!guest) {
-            return res.status(404).json({ error: 'Guest not found' });
-        }
-        res.json(guest);
-    } catch (e) {
-        res.status(500).json({ error: e.message });
-    }
-}
-
 module.exports.updateGuest = async (req, res) => {
     const { id } = req.params;
     console.log(req.body);
-    const guest = await Guest.findByIdAndUpdate(id, { ...req.body}, { new: true });
+    const guest = await Guest.findByIdAndUpdate(id, { ...req.body }, { new: true });
     if (!guest) {
         return res.status(404).json({ error: 'Guest not found' });
     }

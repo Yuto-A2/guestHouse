@@ -23,8 +23,8 @@ export default function PropertyDetail() {
 
     const fetchPropertyDetails = async () => {
       try {
-        // const res = await fetch(`http://localhost:5000/properties/${encodeURIComponent(id)}`,;
-        const res = await fetch(`https://guest-house-ecru.vercel.app/properties/${encodeURIComponent(id)}`,
+        // const res = await fetch(`http://localhost:5000/admin/properties/${encodeURIComponent(id)}`,;
+        const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${encodeURIComponent(id)}`,
           {
             method: "GET",
             credentials: "include"
