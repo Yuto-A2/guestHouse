@@ -86,7 +86,7 @@ const hasEitherPassword = password.length > 0 || confirmPassword.length > 0;
 
     try {
       const res = await fetch(`https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(id)}`, {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
         credentials: "include",
