@@ -60,8 +60,8 @@ export default function AdminPage() {
     useEffect(() => {
         (async () => {
             try {
-                // const res = await fetch("https://guest-house-ecru.vercel.app/admin", { 
-                const res = await fetch("http://localhost:5000/admin", {
+                const res = await fetch("https://guest-house-ecru.vercel.app/admin", { 
+                // const res = await fetch("http://localhost:5000/admin", {
                     method: "GET",
                     credentials: "include",
                 });
@@ -124,7 +124,7 @@ export default function AdminPage() {
 
         setSubmitting(true);
         try {
-            const res = await fetch("https://guest-house-ecru.vercel.app/admin/properties", { // ← フルURL直書き
+            const res = await fetch("https://guest-house-ecru.vercel.app/admin/properties", { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
