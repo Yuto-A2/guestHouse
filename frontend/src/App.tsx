@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from "./components/layouts/Header/Header";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from "./pages/Home";
@@ -10,7 +9,6 @@ import Book from "./pages/Book";
 import About from "./pages/About";
 import EditReservation from "./pages/EditReservation";
 import NotFound from "./pages/NotFound";
-import UserDetail from "./pages/About";
 import Admin from "./pages/Admin";
 
 function App() {
@@ -28,7 +26,6 @@ function App() {
           <Route path="/guests/:guestId/reservations" element={<Book />} />
           <Route path="/about/:id" element={<About />} />
           <Route path="/reservations/:reservationId" element={<EditReservation />} />
-          <Route path="/about/:id" element={<UserDetail />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
       </BrowserRouter>

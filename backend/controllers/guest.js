@@ -70,29 +70,26 @@ module.exports.Register = async (req, res) => {
     }
 }
 
-// routes/guest.js の /guests/login（重要部分だけ）
-router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.status(401).json({ error: info?.message || 'Invalid credentials' });
+module.exports.login = (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+        if (err) return next(err);
+        if (!user) return res.status(401).json({ error: "Invalid credentials" });
 
-    req.logIn(user, (err) => {
-      if (err) return next(err);
-      req.session.save(() => {  // ← これで Set-Cookie が確実に付く
-        res.json({
-          user: {
-            _id: user._id,
-            fname: user.fname,
-            lname: user.lname,
-            email: user.email,
-            role: user.role,
-          }
+        req.login(user, (err) => {
+            if (err) return next(err);
+            res.json({
+                message: "Login successful",
+                user: {
+                    id: user._id,
+                    email: user.email,
+                    fname: user.fname,
+                    lname: user.lname,
+                    phone_num: user.phone_num
+                }
+            });
         });
-      });
-    });
-  })(req, res, next);
-});
-
+    })(req, res, next);
+};
 
 module.exports.logout = (req, res, next) => {
     req.logout((err) => {
