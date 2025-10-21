@@ -10,8 +10,7 @@ export default function Signup() {
   const handleSignup = async (fd: FormData) => {
     const payload = Object.fromEntries(fd.entries()) as Record<string, string>;
     try {
-      // Signup API
-      // const res = await fetch("http://localhost:5000/guests", {
+      // 1) Signup API
       const res = await fetch("https://guest-house-ecru.vercel.app/guests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -23,8 +22,7 @@ export default function Signup() {
         throw new Error(`HTTP ${res.status}: ${msg}`);
       }
 
-      // Login API (Auto Login)
-      // const loginRes = await fetch("http://localhost:5000/guests/login", {
+      // 2) Auto Login
       const loginRes = await fetch("https://guest-house-ecru.vercel.app/guests/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -35,12 +33,16 @@ export default function Signup() {
         }),
       });
 
-      const loginData = await loginRes.json();
+      const loginData = await loginRes.json().catch(() => ({}));
       if (!loginRes.ok) {
-        throw new Error(loginData?.error || "Auto login failed");
+        throw new Error((loginData as any)?.error || "Auto login failed");
       }
 
-      const userObj = loginData?.user ?? loginData?.data ?? loginData;
+      const userObj =
+        (loginData as any)?.user ??
+        (loginData as any)?.data ??
+        loginData;
+
       const userId =
         userObj?.id ?? userObj?._id ?? userObj?.userId ?? userObj?.uid;
 
@@ -49,7 +51,25 @@ export default function Signup() {
         throw new Error("User ID not found");
       }
 
-      localStorage.setItem("auth_user", JSON.stringify(userObj));
+      try {
+        const headerUser = {
+          id: String(userId),
+          name:
+            userObj?.name ??
+            (
+              [userObj?.fname, userObj?.lname].filter(Boolean).join(" ") || undefined
+            ),
+        };
+
+
+        localStorage.setItem("user", JSON.stringify(headerUser));
+        localStorage.setItem("isLoggedIn", "true");
+
+        window.dispatchEvent(new Event("auth-change"));
+      } catch {
+        /* no-op */
+      }
+
       navigate(`/${String(userId)}`, { replace: true });
       setMessage("Sign up successful!");
     } catch (err: any) {
