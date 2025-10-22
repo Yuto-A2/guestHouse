@@ -30,8 +30,8 @@ export default function Review({ guestId }: ReviewComponentProps) {
     e.preventDefault();
     try {
       const res = await fetch(
-        // `https://guest-house-ecru.vercel.app/guests/${guestId}/reviews`,
-        `http://localhost:5000/guests/${guestId}/reviews`,
+        `https://guest-house-ecru.vercel.app/guests/${guestId}/reviews`,
+        // `http://localhost:5000/guests/${guestId}/reviews`,
         {
           method: "POST",
           credentials: "include",
