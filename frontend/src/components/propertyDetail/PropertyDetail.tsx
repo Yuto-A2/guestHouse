@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MyCalendar from "../layouts/calendar/MyCalendar";
 import "./propertyDetail.css";
+import Review from "../layouts/review/Review";
 
 type Property = {
   _id?: string;
@@ -10,10 +11,13 @@ type Property = {
   property_type: string;
 };
 
+type MeRes = { _id?: string; id?: string };
+
 export default function PropertyDetail() {
   const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<Property | null>(null);
   const [error, setError] = useState<string>("");
+  const [guestId, setGuestId] = useState<string | null>(null); 
 
   useEffect(() => {
     if (!id) {
@@ -23,12 +27,10 @@ export default function PropertyDetail() {
 
     const fetchPropertyDetails = async () => {
       try {
-        // const res = await fetch(`http://localhost:5000/admin/properties/${encodeURIComponent(id)}`,;
-        const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${encodeURIComponent(id)}`,
-          {
-            method: "GET",
-            credentials: "include"
-          });
+        const res = await fetch(
+          `https://guest-house-ecru.vercel.app/admin/properties/${encodeURIComponent(id)}`,
+          { method: "GET", credentials: "include" }
+        );
         if (!res.ok) {
           const t = await res.text().catch(() => "");
           throw new Error(`Failed to load property: ${res.status} ${t}`);
@@ -40,12 +42,27 @@ export default function PropertyDetail() {
       }
     };
 
+    const fetchGuestId = async () => {
+      try {
+        const res = await fetch(
+          "https://guest-house-ecru.vercel.app/guests/id",
+          // `http://localhost:5000/guests/id`,
+          { method: "GET", credentials: "include" }
+        );
+        if (!res.ok) return;
+        const me: MeRes = await res.json();
+        const gid = me._id ?? me.id ?? null;
+        if (gid) setGuestId(gid);
+      } catch {
+      }
+    };
+
     fetchPropertyDetails();
+    fetchGuestId();
   }, [id]);
 
   if (error) return <div style={{ color: "red" }}>{error}</div>;
   if (!property) return <div>Loading...</div>;
-
 
   const propertyId = property._id ?? property.id ?? id!;
 
@@ -61,6 +78,7 @@ export default function PropertyDetail() {
       <div className="calendar-container">
         <MyCalendar propertyId={propertyId} />
       </div>
+      {guestId && <Review guestId={guestId} />}
     </div>
   );
 }
