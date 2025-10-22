@@ -79,6 +79,7 @@ export default function PropertyDetail() {
         <MyCalendar propertyId={propertyId} />
       </div>
       {guestId && <Review guestId={guestId} />}
+      <Review guestId={guestId || ""} />
     </div>
   );
 }

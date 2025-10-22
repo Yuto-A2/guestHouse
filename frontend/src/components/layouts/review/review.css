@@ -1,5 +1,7 @@
 .formContainer {
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
     gap: 10px;
 }
@@ -12,6 +14,14 @@
     border-radius: 5px;
     font-size: 1rem;
     resize: vertical;
+}
+
+.selectBox {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
 }
 
 .reviewBtn {

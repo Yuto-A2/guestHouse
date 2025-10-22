@@ -59,7 +59,7 @@ export default function Review({ guestId }: ReviewComponentProps) {
         placeholder="レビューを書いてください"
         required
       />
-      <select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+      <select className="selectBox" value={rating} onChange={(e) => setRating(Number(e.target.value))}>
         {[1, 2, 3, 4, 5].map((n) => (
           <option key={n} value={n}>{n}</option>
         ))}

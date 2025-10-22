@@ -168,3 +168,15 @@ module.exports.deleteGuest = async (req, res) => {
         res.status(500).json({ error: e.message });
     }
 }
+
+module.exports.getSelfId = (req, res) => {
+  try {
+    if (!req.user) return res.status(401).json({ error: 'Not logged in' });
+
+    const gid = (req.user._id && req.user._id.toString) ? req.user._id.toString() : (req.user._id || req.user.id);
+
+    return res.json({ _id: gid, id: gid });
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+};

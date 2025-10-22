@@ -13,6 +13,8 @@ router.post('/login', guest.login);
 
 router.get('/logout', guest.logout);
 
+router.get('/id', guest.getSelfId);
+
 router.route('/:id')
 .get(catchAsync(guest.showGuests))
 .put(catchAsync(guest.updateGuest))
