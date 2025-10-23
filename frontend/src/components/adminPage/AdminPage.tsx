@@ -244,7 +244,8 @@ export default function AdminPage() {
                                     <option value="apartment">Apartment</option>
                                     <option value="house">House</option>
                                     <option value="condo">Condominium</option>
-                                    <option value="guesthouse">Guesthouse</option>
+                                    <option value="guesthouse">Townhouse/Row House</option>
+                                     <option value="guesthouse">Duplex/Triplex/Fourplex</option>
                                 </select>
                             </div>
 
