@@ -2,13 +2,33 @@ const Guest = require('../models/guest');
 const Property = require('../models/property');
 const Review = require('../models/review');
 
+module.exports.showReviews = async (req, res) => {
+  try {
+    const propertyId = req.params.id;
+
+    const reviews = await Review.find({ property: propertyId })
+      .select('body rating')
+      .populate({ path: 'author', select: 'fname lname' })  
+      .populate({ path: 'property', select: 'property_type address' })
+
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ error: 'Reviews not found' });
+    }
+
+    return res.json(reviews);
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+};
+
+
+
 module.exports.createReview = async (req, res) => {
   try {
     if (!req.user || (req.isAuthenticated && !req.isAuthenticated())) {
       return res.status(401).json({ error: "You must be logged in to write a review" });
     }
 
-    // ★ ここを修正：親ルータの :id がゲストID
     const { id: guestId } = req.params;
     const { propertyId, review: reviewPayload } = req.body || {};
     if (!propertyId) return res.status(400).json({ error: "propertyId is required" });
