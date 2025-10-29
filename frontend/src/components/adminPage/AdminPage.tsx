@@ -166,7 +166,7 @@ export default function AdminPage() {
 
         setUpdating(true);
         try {
-            const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${editingId}`, { // ← フルURL直書き
+            const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${editingId}`, { 
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -188,7 +188,7 @@ export default function AdminPage() {
         setDeletingId(id);
         setDeleteErr("");
         try {
-            const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${id}`, { // ← フルURL直書き
+            const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${id}`, {
                 method: "DELETE",
                 credentials: "include",
             });
