@@ -18,10 +18,11 @@ type ReviewProps = {
 };
 
 type ReviewComponentProps = {
-  guestId: string;
+  guestId: string;           // ★ 追加: 必須
+  propertyId: string;        // ★ 追加: 必須（POST body に入れる）
 };
 
-export default function Review({ guestId }: ReviewComponentProps) {
+export default function Review({ guestId, propertyId }: ReviewComponentProps) {
   const [body, setBody] = useState("");
   const [rating, setRating] = useState<number>(5);
   const [msg, setMsg] = useState("");
@@ -30,26 +31,32 @@ export default function Review({ guestId }: ReviewComponentProps) {
   // 既存UIロジックは保持
   const uiValue = 6 - rating;
 
-  // ★ localStorage/hasReviewed を完全撤廃（サーバーの応答で判断）
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     setMsg("");
     setSubmitting(true);
     try {
+      // ★ guestId 未取得時の保険
+      if (!guestId) {
+        setMsg("Please log in to leave a review.");
+        return;
+      }
+
       const res = await fetch(
-        `https://guest-house-ecru.vercel.app/guests/${guestId}/reviews`,
+        `https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(guestId)}/reviews`,
         {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ review: { body, rating: Number(rating) } }),
+          // ★ propertyId を body に追加
+          body: JSON.stringify({ propertyId, review: { body, rating: Number(rating) } }),
         }
       );
 
       if (res.status === 409) {
-        // 同じ guestId に対して既に本人のレビューがある（サーバー基準）
-        setMsg("You can only leave one review for this guest.");
+        // 同じ author × 同じ property の重複（サーバー基準）
+        setMsg("You have already reviewed this property.");
         // フォームは引き続き入力可（削除後や別物件で使えるように）
         return;
       }
@@ -84,13 +91,13 @@ export default function Review({ guestId }: ReviewComponentProps) {
           onChange={(e) => setBody(e.target.value)}
           placeholder="Please leave your review here..."
           required
-          disabled={submitting}  
+          disabled={submitting}
         />
 
         <fieldset
           className="starability-basic mb-3"
           aria-label="Star rating"
-          aria-disabled={submitting}  
+          aria-disabled={submitting}
         >
           <input
             type="radio"
@@ -154,7 +161,7 @@ export default function Review({ guestId }: ReviewComponentProps) {
           className="reviewBtn"
           type="submit"
           text={submitting ? "Sending..." : "Send"}
-          disabled={submitting}  
+          disabled={submitting}
         />
 
         {msg && (
@@ -163,7 +170,6 @@ export default function Review({ guestId }: ReviewComponentProps) {
           </p>
         )}
       </form>
-
     </>
   );
 }

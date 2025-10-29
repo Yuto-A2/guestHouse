@@ -17,7 +17,7 @@ export default function PropertyDetail() {
   const { id } = useParams<{ id: string }>();
   const [property, setProperty] = useState<Property | null>(null);
   const [error, setError] = useState<string>("");
-  const [guestId, setGuestId] = useState<string | null>(null); 
+  const [guestId, setGuestId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -78,7 +78,14 @@ export default function PropertyDetail() {
       <div className="calendar-container">
         <MyCalendar propertyId={propertyId} />
       </div>
-      {guestId && <Review guestId={guestId} />}
+
+      {/* guestId と propertyId が揃ったときだけ描画（undefined で叩かないため） */}
+      {propertyId && guestId && (
+        <Review guestId={guestId} propertyId={propertyId} />
+      )}
+
+      {/* 任意: 未ログイン時の表示 */}
+      {!guestId && <p>Please log in to leave a review.</p>}
     </div>
   );
 }
