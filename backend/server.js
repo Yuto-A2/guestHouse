@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
-
 // --- imports ---
 const express = require('express');
 const cors = require('cors');
@@ -17,47 +16,36 @@ const adminRoutes = require('./routes/auth');
 const Guest = require('./models/guest');
 const sanitize = require('mongo-sanitize');
 
+
 // --- app & env ---
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dbUrl = process.env.MONGO_URL;
-const secret = process.env.SESSION_SECRET;
+const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
-const FRONT = new Set([
-  'http://localhost:3000',
-  'http://localhost:5000',
-  'https://guest-house-ecru.vercel.app',
-  'https://guest-house-if7i.vercel.app',
-]);
-
+const FRONT = ['http://localhost:3000','http://localhost:5000', 'https://guest-house-ecru.vercel.app', 'https://guest-house-if7i.vercel.app'];
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow same-origin or SSR
-    if (FRONT.has(origin) || origin.endsWith('.vercel.app')) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: FRONT,
   credentials: true,
 }));
 
-// handle preflight requests too
-app.options('*', cors({ origin: true, credentials: true }));
+// app.use(cors({
+//   origin: "*"
+// }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.set('trust proxy', true); // required for secure cookies behind proxy
+app.set('trust proxy', true);
 
-// --- session store & config ---
+
+// --- session store & config---
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: { secret: secret || 'thisshouldbeabettersecret!' }
 });
 store.on('error', (e) => console.log('SESSION STORE ERROR', e));
-
-const isProd = process.env.NODE_ENV === 'production';
 
 const sessionConfig = {
   store,
@@ -67,24 +55,23 @@ const sessionConfig = {
   saveUninitialized: false,
   cookie: {
     httpOnly: true,
-    secure: isProd, // only true in production (HTTPS)
-    sameSite: isProd ? 'none' : 'lax', // allow cross-site in production
-    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
-    maxAge: 1000 * 60 * 60 * 24 * 7,
+    secure: true,
+    sameSite: 'none',
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
 };
 
-// --- apply session THEN passport ---
+// --- apply session THEN passport（
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
 
-// --- passport strategy ---
+// --- passport strategy---
 passport.use(Guest.createStrategy());
 passport.serializeUser(Guest.serializeUser());
 passport.deserializeUser(Guest.deserializeUser());
 
-// --- sanitize middleware ---
 app.use((req, res, next) => {
   if (req.body) req.body = sanitize(req.body);
   if (req.params) req.params = sanitize(req.params);
@@ -95,6 +82,8 @@ app.use((req, res, next) => {
   }
   next();
 });
+
+
 
 // --- routes ---
 app.get('/', (req, res) => {
@@ -107,12 +96,10 @@ app.use('/reservations', reservationRoutes);
 app.use('/guests/:id/reviews', reviewRoutes);
 app.use('/admin', adminRoutes);
 
-// --- 404 handler ---
 app.use((req, res) => {
   res.status(404).json({ error: 'Page Not Found', path: req.originalUrl });
 });
 
-// --- error handler ---
 app.use((err, req, res, next) => {
   if (res.headersSent) return next(err);
   const statusCode = err.statusCode || 500;
@@ -124,6 +111,7 @@ app.use((err, req, res, next) => {
   }
   res.status(statusCode).json(payload);
 });
+
 
 // --- db & listen ---
 mongoose
