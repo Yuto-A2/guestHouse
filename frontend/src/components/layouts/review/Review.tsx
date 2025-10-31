@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 import Button from "../button/Button";
 import "./review.css";
 
@@ -18,8 +18,8 @@ type ReviewProps = {
 };
 
 type ReviewComponentProps = {
-  guestId: string;           // ★ 追加: 必須
-  propertyId: string;        // ★ 追加: 必須（POST body に入れる）
+  guestId: string;          
+  propertyId: string;        
 };
 
 export default function Review({ guestId, propertyId }: ReviewComponentProps) {
@@ -28,7 +28,6 @@ export default function Review({ guestId, propertyId }: ReviewComponentProps) {
   const [msg, setMsg] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // 既存UIロジックは保持
   const uiValue = 6 - rating;
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -37,7 +36,7 @@ export default function Review({ guestId, propertyId }: ReviewComponentProps) {
     setMsg("");
     setSubmitting(true);
     try {
-      // ★ guestId 未取得時の保険
+    
       if (!guestId) {
         setMsg("Please log in to leave a review.");
         return;
@@ -49,15 +48,12 @@ export default function Review({ guestId, propertyId }: ReviewComponentProps) {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
-          // ★ propertyId を body に追加
           body: JSON.stringify({ propertyId, review: { body, rating: Number(rating) } }),
         }
       );
 
       if (res.status === 409) {
-        // 同じ author × 同じ property の重複（サーバー基準）
         setMsg("You have already reviewed this property.");
-        // フォームは引き続き入力可（削除後や別物件で使えるように）
         return;
       }
 
@@ -68,7 +64,6 @@ export default function Review({ guestId, propertyId }: ReviewComponentProps) {
       setBody("");
       setRating(5);
 
-      // 下部の一覧があれば再読込イベント（無ければ何も起きません）
       document.dispatchEvent(new Event("reviews-updated"));
     } catch (err: any) {
       setMsg(err?.message || "Failed to post review.");
@@ -80,8 +75,6 @@ export default function Review({ guestId, propertyId }: ReviewComponentProps) {
   return (
     <>
       <h3>Leave a Review</h3>
-
-      {/* 既存の notice は hasReviewed 依存だったので撤去。メッセージは下の msg のみで出します */}
 
       <form className="formContainer" onSubmit={onSubmit}>
         <textarea

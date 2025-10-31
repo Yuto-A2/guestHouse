@@ -23,13 +23,6 @@ const GuestSchema = new Schema(
       type: String,
       required: true,
     },
-    reviews: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Review",
-      },
-    ],
-    
     role: {
       type: String,
       enum: ["user", "admin"],

@@ -1,0 +1,14 @@
+.reviewContainer {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    margin: 1.2rem auto;
+}
+
+.author {
+    font-style: italic;
+    color: #555;
+    margin-top: 8px;
+    font-size: small;
+}

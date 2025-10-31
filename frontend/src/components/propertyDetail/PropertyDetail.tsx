@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import MyCalendar from "../layouts/calendar/MyCalendar";
 import "./propertyDetail.css";
 import Review from "../layouts/review/Review";
+import ShowReview from "../layouts/showReview/ShowReview";
 
 type Property = {
   _id?: string;
@@ -79,13 +80,14 @@ export default function PropertyDetail() {
         <MyCalendar propertyId={propertyId} />
       </div>
 
-      {/* guestId と propertyId が揃ったときだけ描画（undefined で叩かないため） */}
       {propertyId && guestId && (
         <Review guestId={guestId} propertyId={propertyId} />
       )}
 
-      {/* 任意: 未ログイン時の表示 */}
       {!guestId && <p>Please log in to leave a review.</p>}
+      <div>
+        <ShowReview />
+      </div>
     </div>
   );
 }
