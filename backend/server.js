@@ -24,7 +24,7 @@ const dbUrl = process.env.MONGO_URL;
 const secret = process.env.SESSION_SECRET
 
 // --- basic middlewares ---
-const FRONT = ['http://localhost:3000', 'https://guest-house-ecru.vercel.app', 'https://guest-house-if7i.vercel.app'];
+const FRONT = ['http://localhost:3000','http://localhost:5000', 'https://guest-house-ecru.vercel.app', 'https://guest-house-if7i.vercel.app'];
 app.use(cors({
   origin: FRONT,
   credentials: true,
@@ -56,7 +56,7 @@ const sessionConfig = {
   cookie: {
     httpOnly: true,
     secure: true,
-    sameSite: 'none', // 'lax' or 'strict' or 'none'
+    sameSite: 'none',
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1 week
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
   },
