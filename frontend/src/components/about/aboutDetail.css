@@ -46,3 +46,93 @@
   transform: translateY(-2px);
   opacity: 80%; 
 }
+
+/* ===== smartphone ===== */
+@media (max-width: 768px) {
+  .userInfo {
+    width: 90%;
+    margin: 12px 0;
+    font-size: 16px;
+    padding: 12px;
+    height: auto;
+  }
+
+  .labelAboutDetail {
+    display: flex;
+    flex-direction: column;
+    margin: 8px 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 8px;
+  }
+
+  .deleteButton {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  button,
+  .deleteButton {
+    margin-top: 8px;
+  }
+
+  .successMessage,
+  .errorMessage {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* 小さいスマホ (例: 430px以下) 向け */
+@media (max-width: 430px) {
+  .userInfo {
+    font-size: 15px;
+    padding: 10px;
+  }
+
+  .deleteButton {
+    font-size: 15px;
+  }
+}
+
+/* ===== Tablet ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 24px;
+  }
+
+  .userInfo {
+    width: 70%;
+    font-size: 17px;
+    padding: 12px;
+  }
+
+  .labelAboutDetail {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    margin: 10px auto;
+  }
+
+  .deleteButton {
+    width: 70%;
+    padding: 16px;
+    font-size: 17px;
+  }
+
+  .successMessage,
+  .errorMessage {
+    max-width: 600px;
+    margin: 10px auto;
+    font-size: 15px;
+  }
+}

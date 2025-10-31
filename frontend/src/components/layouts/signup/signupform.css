@@ -39,3 +39,38 @@ input:nth-child(12) {
     font-size: 1.2rem;
     text-align: center;
 }
+
+/* ===== smartphone ===== */
+@media (max-width: 768px) {
+  .header_nav_button {
+    width: 100%;
+    font-size: 15px;
+    padding: 12px;
+    margin-top: 10px;
+    text-align: center;
+    white-space: nowrap; 
+  }
+}
+
+/* ===== tablet ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .header_nav_button {
+    width: 70%;
+    font-size: 16px;
+    padding: 14px;
+    margin: 12px auto;
+    display: block;
+    text-align: center;
+    border-radius: 12px;
+    white-space: nowrap; 
+  }
+}
+
+/* ===== smartphone (less than 430px) ===== */
+@media (max-width: 430px) {
+  .header_nav_button {
+    font-size: 14px;
+    padding: 10px;
+    white-space: nowrap; 
+  }
+}

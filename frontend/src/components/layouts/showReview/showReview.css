@@ -12,3 +12,83 @@
     margin-top: 8px;
     font-size: small;
 }
+
+/* ===== Smartphone ===== */
+@media (max-width: 768px) {
+  .reviewContainer {
+    width: 100%;
+    margin: 12px 0;
+    padding: 12px;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
+  .reviewContainer div {
+    font-size: 15px;
+    line-height: 1.5;
+    word-wrap: break-word;
+  }
+
+  .author {
+    font-size: 14px;
+    color: #555;
+    margin-top: 4px;
+  }
+
+  .deleteButton {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    margin-top: 8px;
+  }
+
+  .error {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+/* ===== Tablet ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .reviewContainer {
+    width: 80%;
+    margin: 16px auto;
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .reviewContainer div {
+    font-size: 16px;
+  }
+
+  .author {
+    font-size: 15px;
+    margin-top: 6px;
+  }
+
+  .deleteButton {
+    width: 60%;
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .error {
+    font-size: 15px;
+  }
+}
+
+/* ===== Smartphone (less than 430px) ===== */
+@media (max-width: 430px) {
+  .reviewContainer {
+    padding: 10px;
+  }
+
+  .reviewContainer div {
+    font-size: 14px;
+  }
+
+  .deleteButton {
+    font-size: 14px;
+    padding: 10px;
+  }
+}

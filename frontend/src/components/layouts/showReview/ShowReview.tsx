@@ -103,7 +103,6 @@ export default function ShowReview() {
                     { method: "GET", credentials: "include" }
                 );
 
-                // 👇 404エラーなら「レビューなし」として扱う
                 if (res.status === 404) {
                     setNoReviews(true);
                     return;
