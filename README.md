@@ -67,7 +67,7 @@ About one month.
 
 * Fname: string
 * lname: string
-* email:string
+* email: string
 * phone_num: string
 
 ### Property
@@ -80,7 +80,7 @@ About one month.
 * Start_date: Date
 * End_date: Date
 * guest: string (ref: guest)
-* property: string(ref: property)
+* property: string (ref: property)
 
 ### Review
 
