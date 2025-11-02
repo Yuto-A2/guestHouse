@@ -1,4 +1,8 @@
-# Guest House
+# [Portfolio] A website of an online marketplace for short-and-long-term homestays (Rent House)
+
+## Name of The Service
+
+Rent House
 
 ## Summary
 
