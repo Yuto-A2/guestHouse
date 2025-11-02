@@ -7,7 +7,7 @@ Rent House
 
 ## Summary
 
-This is a website for booking guest houses. It is built using the MERN stack (MongoDB, Express, React, and Node.js).
+For a school project, I developed a house rental website using PHP. Later, I challenged myself to recreate the entire project from scratch using the MERN stack (MongoDB, Express, React, and Node.js).
 
 Guests can make reservations, modify their bookings, check their reservations, view their profiles, and edit their profile information.
 
@@ -23,10 +23,23 @@ About one month.
 
 ## Main Feature
 
-* Logged-in users can make, edit, and delete property reservations, as well as view, update, and delete their profiles.
-* Logged-in users can also post and delete reviews.
-* CRUD operations related to property reservations, profiles, and reviews are available only to logged-in users.
-* Admins can add, edit, and delete properties.
+### Users
+
+* User registration.
+* Login. (via email and password)
+* Password reset (Only loged in user).
+* View and update personal profile page (Only loged in user).
+* Create a reservation and update it (Only loged in user).
+
+### Properties
+
+* View property listings and detailed information.
+* Admin users can add, update, and delete properties.
+
+### Review
+* Users can post reviews after logging in.
+* Reviews can be viewed by all users.
+* Only the user who created a review can delete it.
 
 ## Tools
 
@@ -48,6 +61,33 @@ About one month.
 * Others
   * Passport etc
 
+## Database
+
+### Guest
+
+* Fname: string
+* lname: string
+* email:string
+* phone_num: string
+
+### Property
+
+* Address: string
+* property_type: string
+
+### Reservation
+
+* Start_date: Date
+* End_date: Date
+* guest: string (ref: guest)
+* property: string(ref: property)
+
+### Review
+
+* Body: string
+* Rating: number
+* Author: string (ref: guest)
+* Property: string (ref: property)
 
 
 
