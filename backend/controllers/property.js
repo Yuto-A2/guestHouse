@@ -21,49 +21,70 @@ module.exports.index = async (req, res) => {
 };
 
 // Create a new property
+// Create a new property
 module.exports.createProperties = async (req, res) => {
   try {
-    // 1) 認証を先に
+    // 1) 認証チェックを最初に
     if (!isAuthed(req)) return res.status(401).json({ error: 'Unauthorized' });
     if (!isAdmin(req)) return res.status(403).json({ error: 'Forbidden: admin only' });
 
-    const { address, property_type } = req.body || {};
+    // 2) 入力バリデーション（前後空白も除去）
+    const address = (req.body?.address ?? '').trim();
+    const property_type = (req.body?.property_type ?? '').trim();
     if (!address || !property_type) {
       return res.status(400).json({ error: 'address と property_type は必須です' });
     }
 
+    // 3) Mapbox トークン確認
     if (!geocoder) {
+      console.error('MAPBOX_TOKEN is missing or geocoder not initialized');
       return res.status(500).json({ error: 'Server misconfigured: MAPBOX_TOKEN missing' });
     }
 
-    const geoRes = await geocoder.forwardGeocode({
-      query: String(address).trim(),
-      limit: 1
-    }).send();
+    // 4) ジオコード（タイムアウト付きでハング対策）
+    const geocodeWithTimeout = (query, ms = 7000) => {
+      return Promise.race([
+        geocoder.forwardGeocode({ query, limit: 1 }).send(),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Geocoding timeout')), ms)),
+      ]);
+    };
 
-    const feature = geoRes?.body?.features?.[0];
-    if (!feature?.geometry?.coordinates) {
+    let feature;
+    try {
+      const geoRes = await geocodeWithTimeout(address, 7000);
+      feature = geoRes?.body?.features?.[0];
+    } catch (err) {
+      console.error('Geocoding error:', err?.message || err);
+      return res.status(502).json({ error: `Geocoding failed: ${err?.message || 'unknown error'}` });
+    }
+
+    // 5) 結果確認
+    const coords = feature?.geometry?.coordinates; // [lng, lat]
+    if (!Array.isArray(coords) || coords.length !== 2) {
       return res.status(400).json({
-        error: 'Cannot find location for the given address'
+        error: 'Cannot find location for the given address. 市・州・国まで含めて入力してください。',
       });
     }
 
+    // 6) 保存（ホワイトリストで生成）
     const newProperty = new Property({
-      address: String(address).trim(),
-      property_type: String(property_type).trim(),
-      geometry: {
-        type: 'Point',
-        coordinates: feature.geometry.coordinates 
-      }
+      address,
+      property_type,
+      geometry: { type: 'Point', coordinates: coords }, // [経度, 緯度]
     });
+
+    // デバッグしたい場合は以下を有効化
+    // console.log('About to save:', JSON.stringify(newProperty.toObject(), null, 2));
 
     await newProperty.save();
     return res.status(201).json(newProperty);
+
   } catch (e) {
     console.error('createProperties error:', e);
-    res.status(500).json({ error: e.message || 'Unknown server error' });
+    return res.status(500).json({ error: e.message || 'Unknown server error' });
   }
 };
+
 
 // Show a specific property
 module.exports.showProperties = async (req, res) => {

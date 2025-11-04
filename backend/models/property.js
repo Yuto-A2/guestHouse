@@ -27,5 +27,6 @@ const PropertySchema = new mongoose.Schema(
 );
 
 const Property = mongoose.model("Property", PropertySchema);
+PropertySchema.index({ geometry: "2dsphere" });
 
 module.exports = Property;
