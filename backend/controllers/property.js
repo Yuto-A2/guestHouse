@@ -10,7 +10,7 @@ function isAdmin(req) {
   return isAuthed(req) && req.user?.role === 'admin';
 }
 
-// 一覧
+// Show all properties
 module.exports.index = async (req, res) => {
   try {
     const properties = await Property.find({});
@@ -20,7 +20,7 @@ module.exports.index = async (req, res) => {
   }
 };
 
-// 追加
+// Create a new property
 module.exports.createProperties = async (req, res) => {
   try {
     // 1) 認証を先に
@@ -36,7 +36,6 @@ module.exports.createProperties = async (req, res) => {
       return res.status(500).json({ error: 'Server misconfigured: MAPBOX_TOKEN missing' });
     }
 
-    // 2) 住所でジオコード（property.location ではなく address）
     const geoRes = await geocoder.forwardGeocode({
       query: String(address).trim(),
       limit: 1
@@ -49,13 +48,12 @@ module.exports.createProperties = async (req, res) => {
       });
     }
 
-    // 3) 保存（ホワイトリスト）
     const newProperty = new Property({
       address: String(address).trim(),
       property_type: String(property_type).trim(),
       geometry: {
         type: 'Point',
-        coordinates: feature.geometry.coordinates // [lng, lat]
+        coordinates: feature.geometry.coordinates 
       }
     });
 
@@ -67,7 +65,7 @@ module.exports.createProperties = async (req, res) => {
   }
 };
 
-// 詳細
+// Show a specific property
 module.exports.showProperties = async (req, res) => {
   try {
     const property = await Property.findById(req.params.id);
@@ -78,7 +76,7 @@ module.exports.showProperties = async (req, res) => {
   }
 };
 
-// 編集フォーム取得
+// Show edit form
 module.exports.renderEditForm = async (req, res) => {
   const { id } = req.params;
   try {
@@ -93,7 +91,7 @@ module.exports.renderEditForm = async (req, res) => {
   }
 };
 
-// 更新（住所が変わったら再ジオコード）
+// Update a property
 module.exports.updateProperty = async (req, res) => {
   const { id } = req.params;
   try {
@@ -128,7 +126,7 @@ module.exports.updateProperty = async (req, res) => {
   }
 };
 
-// 削除
+// Delete a property
 module.exports.deleteProperty = async (req, res) => {
   const { id } = req.params;
   try {
