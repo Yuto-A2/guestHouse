@@ -17,6 +17,9 @@ For security, passwords are encrypted and salted using Passport.
 
 URL: (https://guest-house-if7i.vercel.app/)
 
+Test  account: 
+email: jiro@example.com, PW: test123
+
 ## Production period
 
 About one month.
