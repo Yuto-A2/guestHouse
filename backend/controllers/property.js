@@ -1,4 +1,7 @@
 const Property = require('../models/property');
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocoder = mbxGeocoding ({ accessToken: mapBoxToken });
 
 function isAuthed(req) {
   return req.isAuthenticated && req.isAuthenticated();
@@ -18,10 +21,15 @@ module.exports.index = async (req, res) => {
 
 module.exports.createProperties = async (req, res) => {
   try {
+    const geoDate = await geocoder.forwardGeocode({
+      query: req.body.property.location,
+      limit: 1  
+    }).send()
     if (!isAuthed(req)) return res.status(401).json({ error: 'Unauthorized' });
     if (!isAdmin(req)) return res.status(403).json({ error: 'Forbidden: admin only' });
 
     const newProperty = new Property(req.body);
+    newProperty.geometry = geoDate.body.features[0].geometry;
     await newProperty.save();
     res.status(201).json(newProperty);
   } catch (e) {

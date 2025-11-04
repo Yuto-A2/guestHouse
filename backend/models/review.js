@@ -10,7 +10,7 @@ const reviewSchema = new Schema(
         property: { type: Schema.Types.ObjectId, ref: "Property", required: true },
     },
     {
-        strict: "throw", // ★ 未定義フィールド(guest等)が来たら例外を投げる
+        strict: "throw", 
     }
 );
 reviewSchema.index({ author: 1, property: 1 }, { unique: true });
