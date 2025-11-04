@@ -10,6 +10,7 @@ import About from "./pages/About";
 import EditReservation from "./pages/EditReservation";
 import NotFound from "./pages/NotFound";
 import Admin from "./pages/Admin";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 function App() {
   return (
