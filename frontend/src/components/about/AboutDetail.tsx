@@ -24,7 +24,6 @@ export default function AboutDetail() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [password, setPassword] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -61,65 +60,57 @@ export default function AboutDetail() {
     if (success) setSuccess("");
   };
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (!user || !id) return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!user || !id) return;
 
-  setSuccess("");
-  setError("");
+    setSuccess("");
+    setError("");
 
-  const hasEitherPassword =
-    password.length > 0 || confirmPassword.length > 0;
-
-  if (!hasEitherPassword) {
-    setError("Please enter new password fields!");
-    return;
-  }
-
-  if (!oldPassword) {
-    setError("Please enter your current password!");
-    return;
-  }
-
-  if (!password || !confirmPassword) {
-    setError("Please fill out both new password fields!");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    setError("Passwords do not match!");
-    return;
-  }
-
-  try {
-    const res = await fetch(
-  `https://guest-house-ecru.vercel.app/password/${encodeURIComponent(id)}`,
-  {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({
-      oldPassword,
-      newPassword: password,
-    }),
-  }
-);
-
-    const data: { error?: string } = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      throw new Error(data.error || "Failed to update password");
+    const hasEitherPassword = password.length > 0 || confirmPassword.length > 0;
+    if (hasEitherPassword) {
+      if (!password || !confirmPassword) {
+        setError("Please fill out both password fields!");
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError("Passwords do not match!");
+        return;
+      }
     }
 
-    setSuccess("Password updated successfully");
-    setPassword("");
-    setConfirmPassword("");
-    setOldPassword("");
-  } catch (err) {
-    setError(err instanceof Error ? err.message : "Password update failed");
-  }
-};
-  
+    const payload: Partial<User> & { password?: string } = {
+      fname: user.fname,
+      lname: user.lname,
+      email: user.email,
+      phone_num: user.phone_num,
+    };
+    if (password) payload.password = password;
+
+    try {
+      const res = await fetch(
+        `https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(id)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          credentials: "include",
+        }
+      );
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error((data as any)?.error || "Failed to update");
+
+      setSuccess("Update successfully");
+      setPassword("");
+      setConfirmPassword("");
+      setError("");
+      setTimeout(() => setSuccess(""), 3000);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Update failed";
+      setError(msg);
+      setSuccess("");
+    }
+  };
 
   const logout = async () => {
     try {
@@ -228,18 +219,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             value={user.phone_num}
             onChange={handleChange}
             className="userInfo"
-          />
-        </label>
-
-        <label className="labelAboutDetail">
-          Current Password:
-          <input
-            type="password"
-            name="oldPassword"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            className="userInfo"
-            autoComplete="current-password"
           />
         </label>
 
