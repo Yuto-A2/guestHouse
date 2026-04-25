@@ -235,6 +235,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           Current Password:
           <input
             type="password"
+            name="oldPassword"
             value={oldPassword}
             onChange={(e) => setOldPassword(e.target.value)}
             className="userInfo"
