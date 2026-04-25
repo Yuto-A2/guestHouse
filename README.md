@@ -1,5 +1,5 @@
 # [Portfolio] A website of an online marketplace for short-and-long-term homestays (Rent House)
-![renthouse](https://github.com/user-attachments/assets/f72c38e5-287f-4adc-a8e0-5af86f71fc53)
+![guesthouse](https://github.com/user-attachments/assets/abd90dff-eff5-4783-8a53-e7a4d440e844)
 
 ## Name of The Service
 
@@ -16,6 +16,10 @@ In addition, admin users can add and edit guest houses.
 For security, passwords are encrypted and salted using Passport.
 
 URL: (https://guest-house-if7i.vercel.app/)
+
+Test  account: 
+
+email: jiro@example.com, PW: test123
 
 ## Production period
 
@@ -35,6 +39,7 @@ About one month.
 
 * View property listings and detailed information.
 * Admin users can add, update, and delete properties.
+* The property location is displayed on the map using Mapbox.
 
 ### Review
 * Users can post reviews after logging in.
@@ -74,6 +79,7 @@ About one month.
 
 * Address: string
 * property_type: string
+* geometry: {type: {type:string, enum:['Point']}, coordinates{type: [Number]}}
 
 ### Reservation
 
