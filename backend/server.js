@@ -95,6 +95,7 @@ app.use('/guests', guestRoutes);
 app.use('/reservations', reservationRoutes);
 app.use('/guests/:id/reviews', reviewRoutes);
 app.use('/admin', adminRoutes);
+app.use('/password', passwordRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ error: 'Page Not Found', path: req.originalUrl });
