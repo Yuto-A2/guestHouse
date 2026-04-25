@@ -13,6 +13,7 @@ const guestRoutes = require('./routes/guest');
 const reservationRoutes = require('./routes/reservation');
 const reviewRoutes = require('./routes/reviews');
 const adminRoutes = require('./routes/auth');
+const passwordRoutes = require('./routes/password');
 const Guest = require('./models/guest');
 const sanitize = require('mongo-sanitize');
 
@@ -96,7 +97,6 @@ app.use('/reservations', reservationRoutes);
 app.use('/guests/:id/reviews', reviewRoutes);
 app.use('/admin', adminRoutes);
 app.use('/password', passwordRoutes);
-
 app.use((req, res) => {
   res.status(404).json({ error: 'Page Not Found', path: req.originalUrl });
 });

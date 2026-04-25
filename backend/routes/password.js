@@ -5,6 +5,6 @@ const catchAsync = require('../utils/catchAsync');
 
 
 router.route('/:id')
-  .put(requireAuth, requireAdmin, catchAsync(password.updatePassword));
+ .put(catchAsync(password.updatePassword))
 
   module.exports = router;
