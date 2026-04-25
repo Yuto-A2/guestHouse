@@ -93,17 +93,17 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
   try {
     const res = await fetch(
-      `https://guest-house-ecru.vercel.app/password/${encodeURIComponent(id)}/`,
-      {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          oldPassword,
-          newPassword: password,
-        }),
-      }
-    );
+  `https://guest-house-ecru.vercel.app/password/${encodeURIComponent(id)}`,
+  {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({
+      oldPassword,
+      newPassword: password,
+    }),
+  }
+);
 
     const data: { error?: string } = await res.json().catch(() => ({}));
 
