@@ -2,21 +2,6 @@ import { useState } from "react";
 import Button from "../button/Button";
 import "./review.css";
 
-type User = {
-  _id?: string;
-  id?: string;
-  fname: string;
-  lname: string;
-};
-
-type ReviewProps = {
-  _id?: string;
-  id?: string;
-  body: string;
-  rating: number;
-  author: User;
-};
-
 type ReviewComponentProps = {
   guestId: string;          
   propertyId: string;        

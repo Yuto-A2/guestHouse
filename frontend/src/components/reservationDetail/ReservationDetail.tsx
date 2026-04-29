@@ -18,13 +18,6 @@ type Reservation = {
   updatedAt?: string;
 };
 
-// Format guest display name
-const displayGuest = (g: Reservation["guest"]) => {
-  if (typeof g === "string") return g;
-  const name = [g?.fname, g?.lname].filter(Boolean).join(" ");
-  return name || g?.email || g?._id || "(unknown guest)";
-};
-
 // Format property display info
 const displayProperty = (p: Reservation["property"]) => {
   if (typeof p === "string") return p;
