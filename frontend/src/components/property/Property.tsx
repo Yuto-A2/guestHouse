@@ -6,10 +6,7 @@ import "./property.css";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 
-const token =
-    (typeof import.meta !== "undefined" &&
-        (import.meta as any)?.env?.VITE_MAPBOX_TOKEN) ||
-    process.env.REACT_APP_MAPBOX_TOKEN;
+const token = process.env.REACT_APP_MAPBOX_TOKEN;
 
 mapboxgl.accessToken = token as string;
 
