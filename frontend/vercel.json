@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://guest-house-ecru.vercel.app/:path*"
+    }
+  ]
+}
