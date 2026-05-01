@@ -50,7 +50,7 @@ export default function UpdateReservation() {
         setLoading(true);
         setErr(null);
         const res = await fetch(
-          `https://guest-house-ecru.vercel.app/reservations/${reservationId}`,
+          `/api/reservations/${reservationId}`,
           { credentials: "include" }
         );
         const data = await res.json().catch(() => ({}));
@@ -80,7 +80,7 @@ export default function UpdateReservation() {
       end_date: toYYYYMMDD_Toronto(range[1]),
     };
     const res = await fetch(
-      `https://guest-house-ecru.vercel.app/reservations/${reservationId}`,
+      `/api/reservations/${reservationId}`,
       {
         method: "PUT",
         headers: { "Content-Type": "application/json" },

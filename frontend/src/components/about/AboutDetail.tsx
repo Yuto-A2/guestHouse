@@ -37,7 +37,7 @@ export default function AboutDetail() {
     (async () => {
       try {
         const res = await fetch(
-          `https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(id)}`,
+          `/api/guests/${encodeURIComponent(id)}`,
           { method: "GET", credentials: "include" }
         );
         const data = await res.json().catch(() => ({}));

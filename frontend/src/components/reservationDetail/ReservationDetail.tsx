@@ -48,7 +48,7 @@ export default function GuestReservations() {
 
         // Fetch reservation data
         const res = await fetch(
-          `https://guest-house-ecru.vercel.app/guests/${guestId}/reservations`,
+          `/api/guests/${guestId}/reservations`,
           {
             method: "GET",
             headers: { "Content-Type": "application/json" },
@@ -94,9 +94,7 @@ export default function GuestReservations() {
       setDeletingId(reservationId); // Mark which reservation is being deleted
 
       const res = await fetch(
-        `https://guest-house-ecru.vercel.app/reservations/${encodeURIComponent(
-          reservationId
-        )}`,
+        `/api/reservations/${encodeURIComponent(reservationId)}`,
         {
           method: "DELETE",
           credentials: "include",

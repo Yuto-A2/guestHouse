@@ -60,7 +60,7 @@ export default function AdminPage() {
     useEffect(() => {
         (async () => {
             try {
-                const res = await fetch("https://guest-house-ecru.vercel.app/admin", { 
+                const res = await fetch("/api/admin", { 
                 // const res = await fetch("http://localhost:5000/admin", {
                     method: "GET",
                     credentials: "include",
@@ -85,7 +85,7 @@ export default function AdminPage() {
         (async () => {
             try {
                 setListLoading(true);
-                const res = await fetch("https://guest-house-ecru.vercel.app/admin/properties", {
+                const res = await fetch("/api/admin/properties", {
                     method: "GET",
                     credentials: "include",
                 });
@@ -124,7 +124,7 @@ export default function AdminPage() {
 
         setSubmitting(true);
         try {
-            const res = await fetch("https://guest-house-ecru.vercel.app/admin/properties", { 
+            const res = await fetch("/api/admin/properties", { 
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -166,7 +166,7 @@ export default function AdminPage() {
 
         setUpdating(true);
         try {
-            const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${editingId}`, { 
+            const res = await fetch(`/api/admin/properties/${editingId}`, { 
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
@@ -188,7 +188,7 @@ export default function AdminPage() {
         setDeletingId(id);
         setDeleteErr("");
         try {
-            const res = await fetch(`https://guest-house-ecru.vercel.app/admin/properties/${id}`, {
+            const res = await fetch(`/api/admin/properties/${id}`, {
                 method: "DELETE",
                 credentials: "include",
             });

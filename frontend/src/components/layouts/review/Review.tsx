@@ -28,7 +28,7 @@ export default function Review({ guestId, propertyId }: ReviewComponentProps) {
       }
 
       const res = await fetch(
-        `https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(guestId)}/reviews`,
+        `/api/guests/${encodeURIComponent(guestId)}/reviews`,
         {
           method: "POST",
           credentials: "include",

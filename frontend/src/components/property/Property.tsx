@@ -33,7 +33,7 @@ export default function Property() {
         const fetchProperties = async () => {
             try {
                 setLoading(true);
-                const response = await fetch("https://guest-house-ecru.vercel.app/admin/properties", {
+                const response = await fetch("/api/admin/properties", {
                     method: "GET",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include", 

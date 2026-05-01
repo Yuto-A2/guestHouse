@@ -99,7 +99,7 @@ export default function ShowReview() {
         const fetchReviews = async () => {
             try {
                 const res = await fetch(
-                    `https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(id)}/reviews`,
+                    `/api/guests/${encodeURIComponent(id)}/reviews`,
                     { method: "GET", credentials: "include" }
                 );
 
@@ -140,7 +140,7 @@ export default function ShowReview() {
 
         try {
             const res = await fetch(
-                `https://guest-house-ecru.vercel.app/guests/${encodeURIComponent(
+                `/api/guests/${encodeURIComponent(
                     id
                 )}/reviews/${encodeURIComponent(reviewId)}`,
                 { method: "DELETE", credentials: "include" }

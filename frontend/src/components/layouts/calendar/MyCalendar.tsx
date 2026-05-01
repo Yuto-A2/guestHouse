@@ -106,7 +106,7 @@ export default function MyCalendar({
         end_date: toYYYYMMDD_Toronto(range[1]),
       };
 
-      const res = await fetch("https://guest-house-ecru.vercel.app/reservations", {
+      const res = await fetch("/api/reservations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
